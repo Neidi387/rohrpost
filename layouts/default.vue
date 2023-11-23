@@ -1,15 +1,11 @@
 <template>
-    <header>
-        <h1>
-            Hallo Welt
-        </h1>
-    </header>
-    <main>
+    <v-app-bar title="Hallo Welt" elevation="2" color="#CCCCCC"></v-app-bar>
+    <v-main>
         <slot></slot>
-    </main>
-    <footer>
+    </v-main>
+    <v-footer app elevation="2" color="#CCCCCC">
         <span>--Made by Neidi</span>
-    </footer>
+    </v-footer>
 </template>
 
 <script setup lang="ts">
