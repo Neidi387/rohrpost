@@ -25,5 +25,6 @@ export default defineNuxtConfig({
         transformAssetUrls,
       }
     }
-  }
+  },
+  ssr: false,
 })
