@@ -26,5 +26,7 @@ export default defineNuxtConfig({
       }
     }
   },
-  ssr: false,
+  routeRules: {
+    'simpleRTCConnectionTest': {ssr: false}
+  }
 })

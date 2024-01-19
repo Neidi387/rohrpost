@@ -1,4 +1,5 @@
-export function useRTCConnectionTestComposable(): {localChannel: Ref<RTCDataChannel | undefined>, remoteChannel: Ref<RTCDataChannel | undefined>} {
+export function useRTCConnectionTestComposable(): {localChannel: Ref<RTCDataChannel | undefined>, remoteChannel: Ref<RTCDataChannel | undefined>, debugWebRTCJSONExamples: WebRTCJSONExamplesDebug} {
+    const debugWebRTCJSONExamples = new WebRTCJSONExamplesDebug();
     const localChannel = ref<RTCDataChannel>();
     const remoteChannel = ref<RTCDataChannel>();
     const localPC = new RTCPeerConnection();
@@ -10,7 +11,7 @@ export function useRTCConnectionTestComposable(): {localChannel: Ref<RTCDataChan
             remotePC.addIceCandidate(evt.candidate);
             // Logging
             const iceCandidateJSON = JSON.stringify(evt.candidate);
-            console.log('WebRTC JSON\n\nNew Local -> remote ICE Candidate:\n' + iceCandidateJSON);
+            debugWebRTCJSONExamples.local.iceCandidates.push(iceCandidateJSON);
         }
     });
     remotePC.addEventListener('icecandidate', evt => {
@@ -18,7 +19,7 @@ export function useRTCConnectionTestComposable(): {localChannel: Ref<RTCDataChan
             localPC.addIceCandidate(evt.candidate);
             // Logging
             const iceCandidateJSON = JSON.stringify(evt.candidate);
-            console.log('WebRTC JSON\n\nNew Remote -> local ICE Candidate:\n' + iceCandidateJSON);
+            debugWebRTCJSONExamples.remote.iceCandidates.push(iceCandidateJSON);
         } 
     });
     (async function () {
@@ -31,7 +32,19 @@ export function useRTCConnectionTestComposable(): {localChannel: Ref<RTCDataChan
         // For Logging
         const offerJSON = JSON.stringify(offer)
         const answerJSON = JSON.stringify(answer);
-        console.log(`WebRTC JSON\n\nOffer:\n${offerJSON}\n\nAnswer:\n${answerJSON}`);
+        debugWebRTCJSONExamples.local.offer = offerJSON;
+        debugWebRTCJSONExamples.remote.answer = answerJSON;
     })();
-    return {localChannel, remoteChannel};
+    return {localChannel, remoteChannel, debugWebRTCJSONExamples};
 }
+
+class WebRTCJSONExamplesDebug {
+    local = {
+        offer: '',
+        iceCandidates: [] as string[],
+    };
+    remote = {
+        answer: '',
+        iceCandidates: [] as string[],
+    };
+};

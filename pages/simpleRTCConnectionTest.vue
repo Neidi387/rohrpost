@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
     const text = ref('');
-    const {localChannel, remoteChannel} = useRTCConnectionTestComposable();
+    const {localChannel, remoteChannel, debugWebRTCJSONExamples} = useRTCConnectionTestComposable();
     const remoteMessagesRecived = reactive<string[]>(['No remote messages yet...']);
     const localMessagesRecived = reactive<string[]>(['No local messages yet...']);
     watchEffect(() => {
@@ -26,6 +26,9 @@
         remoteChannel.value.addEventListener('message', evt => {
             remoteMessagesRecived.push(evt.data);
         });
+        // @ts-ignore
+        window.debugWebRTCJSONExamples = debugWebRTCJSONExamples;
+        console.log('WebRTC JSONs: ', debugWebRTCJSONExamples);
     });
 
     function sendMessage(from: 'local' | 'remote') {
