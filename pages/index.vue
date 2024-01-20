@@ -1,4 +1,6 @@
 <template>
+    Ich bin die Page
+    <v-btn :to="{name: 'simpleRTCConnectionTest'}">Simple RTC Connection Test (Script)</v-btn>
     <h2>Eigene Adresse</h2>
     <v-chip
     label

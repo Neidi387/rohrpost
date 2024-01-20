@@ -25,5 +25,8 @@ export default defineNuxtConfig({
         transformAssetUrls,
       }
     }
+  },
+  routeRules: {
+    'simpleRTCConnectionTest': {ssr: false}
   }
 })
