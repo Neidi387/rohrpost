@@ -1,5 +1,6 @@
 <template>
-    <v-text-field type="number" v-model="counter"/>
+    <v-btn>Active Start</v-btn>
+    <v-btn>Passive Start</v-btn>
 </template>
 
 <script setup lang="ts">
@@ -7,15 +8,12 @@
 
     $io.connect();
 
-    const counter = ref(0);
-
-
-    $io.on(SocketEvent.new_count, (message: number) => {
+    $io.on(ESignaling.ON_PEER_MESSAGE, (message: number) => {
         counter.value = message;
     })
 
     watch(counter, () => {
-        $io.emit(SocketEvent.change, {value: counter.value});
+        $io.emit(ESignaling.change, {value: counter.value});
     });
 
 </script>

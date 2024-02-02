@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      socketPort: 3001,
+      socketPort: 3002,
       url: 'http://localhost'
     },
   },
@@ -33,14 +33,16 @@ export default defineNuxtConfig({
     }
   },
   plugins: [
-    './plugins/socket.io'
+    // './plugins/signaling-socket.io'
   ],
   nitro: {
     plugins: [
-      './plugins/socket.io-server'
+      // './plugins/signaling-socket.io-server'
     ]
   },
   routeRules: {
-    'simpleRTCConnectionTest': {ssr: false}
-  }
+    'simpleRTCConnectionTest': {ssr: false},
+    'signaling-test-passive': {ssr: false},
+    'signaling-test-active': {ssr: false},
+  },
 })
