@@ -16,7 +16,7 @@ export default defineNitroPlugin(async nitroApp => {
             console.log(id, 'New Socket. ID: ', id);
             const registry = await new Promise<TSignalingRegistry>(res => socket.on( ESignaling.ON_REGISTER, res ) );
             console.log(id, 'registry', registry);
-            // onclose
+            socket.on('disconnect', () => console.log('disconnect'));
             if ( 'passive' === registry.role ) {
                 connectionMap.set(registry.address, {
                     address: registry.address,
