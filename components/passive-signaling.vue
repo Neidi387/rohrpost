@@ -25,19 +25,19 @@
     pc.addEventListener('datachannel', e => {
         if( 'meta' === e.channel.label ) {
             datachannels.meta = e.channel;
-            debugger;
+            //debugger;
         } if( 'data' === e.channel.label ) {
             datachannels.data = e.channel;
-            debugger;
+            //debugger;
         }
         if ( 'send' in datachannels.meta && 'send' in datachannels.data ) {
-            debugger
+            //debugger
             emit('datachannels', datachannels);
         }
     });
     pc.addEventListener('connectionstatechange', e => {
         if ( 'connected' === pc.connectionState ) {
-            debugger;
+            //debugger;
         }
     });
     pc.addEventListener('icecandidate', e => {
@@ -45,33 +45,33 @@
             return;
         }
         $io.emit(ESignaling.ON_LOCAL_MESSAGE, e.candidate);
-        debugger;
+        //debugger;
     });
     $io.connect();
     $io.on(ESignaling.ON_REMOTE_MESSAGE, (msg: TSignalingMessage) => {
         if ( 'candidate' in msg ) {
             pc.addIceCandidate(msg);
-            debugger;
+            //debugger;
         }
     })
     startSignaling();
     async function startSignaling() {
         $io.emit(ESignaling.ON_REGISTER, { role: 'passive', address: address.value });
-        debugger;
+        //debugger;
         const offer = await new Promise<RTCSessionDescriptionInit>(res => $io.on(ESignaling.ON_REMOTE_MESSAGE, (msg: TSignalingMessage) => {
             if ( 'sdp' in msg && 'offer' === msg.type ) {
                 res(msg);
-                debugger;
+                //debugger;
             }
         }))
         pc.setRemoteDescription(offer);
-        debugger;
+        //debugger;
         const answer: TSignalingMessage = await pc.createAnswer();
-        debugger;
+        //debugger;
         $io.emit(ESignaling.ON_LOCAL_MESSAGE, answer);
-        debugger;
+        //debugger;
         pc.setLocalDescription(answer);
-        debugger;
+        //debugger;
     }
 </script>
 
