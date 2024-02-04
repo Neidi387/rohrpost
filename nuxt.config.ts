@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       socketPort: 3002,
-      url: 'http://localhost'
+      url: 'http://192.168.178.25'
     },
   },
   build: {
@@ -44,5 +44,6 @@ export default defineNuxtConfig({
     'simpleRTCConnectionTest': {ssr: false},
     'signaling-test-passive': {ssr: false},
     'signaling-test-active': {ssr: false},
+    'first-working-version': {ssr: false},
   },
 })
