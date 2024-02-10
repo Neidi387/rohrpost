@@ -2,7 +2,7 @@
     <h2>Active Signaling</h2>
     <form @submit.prevent="startSignaling">
         <label>
-            <Address>Adresse</Address>
+            Adresse
             <input type="text" v-model="address">
         </label>
         <input type="submit">
@@ -54,8 +54,8 @@
     })
     async function startSignaling() {
         $io.connect();
-        alert($io.id);
-        alert(typeof $io);
+        // alert($io.id);
+        // alert(typeof $io);
         $io.emit(ESignaling.ON_REGISTER, { role: 'active', address: address.value });
         //debugger
         const offer: TSignalingMessage = await pc.createOffer();

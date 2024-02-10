@@ -1,4 +1,4 @@
-export async function getPromiseFromEventListener( target: EventTarget, name: string ): Promise<Event> {
+export async function getPromiseFromEventListener( name: string, target: EventTarget ): Promise<Event> {
     let resolve: ( e: Event ) => void;
     const p = new Promise<Event>( res => resolve = res );
     target.addEventListener(name, e => {

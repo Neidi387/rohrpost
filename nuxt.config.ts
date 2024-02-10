@@ -1,17 +1,22 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import { getLocalIP } from './utils/getLocalIP';
+
+const devHost = getLocalIP();
+
+console.log('Dev Host: ' + devHost);
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
   devServer: {
     host: '0.0.0.0',
-    // port: 3000
+    port: 3000
   },
   runtimeConfig: {
     public: {
-      socketPort: 3002,
-      url: 'http://192.168.178.25'
+      socketPort: 3001,
+      url: 'http://' + devHost,
     },
   },
   build: {

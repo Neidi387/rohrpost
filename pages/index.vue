@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-
+    import type { tryAgainWithTimeout } from '~/utils/tryAgainWithTimeout';
 </script>
 
 <style scoped>
