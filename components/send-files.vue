@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
     import { FileInfo } from '~/utils/dataChannel/FileInfo';
-    import { EMetaMessageName } from '~/utils/dataChannel/IMetaMessage';
+    import { EMetaMessageName, type IMetaFileAcknowledge, type IMetaFileAnnounced, type IMetaFileInfoAnnouncement } from '~/utils/dataChannel/IMetaMessage';
 
     const props = defineProps<{
         dataChannels: {
@@ -59,24 +59,42 @@
         if ( undefined === fileInfoListOut.value || undefined === fileListOut.value ) {
             return;
         }
-        const fileInfoJson = JSON.stringify( fileInfoListOut.value );
-        const pFileInfoListReceivedAcknowledged: Promise<void> = new Promise((res, rej) => props.dataChannels.meta.addEventListener('message', evt => {
-            if ( EMetaMessageName.ACKNOWLEDGE_FILE_INFO_LIST in evt.data ) {
+        const pFileInfoListReceivedAcknowledged: Promise<void> = new Promise( res => props.dataChannels.meta.addEventListener('message', evt => {
+            if ( EMetaMessageName.ACKNOWLEDGE_FILE_INFO_LIST === evt.data.name ) {
                 res();
-            } else {
-                rej();
+                return
             }
         }));
-        props.dataChannels.meta.send( fileInfoJson );
-        const fileInfoAcknowledgeMessage = await pFileInfoListReceivedAcknowledged;
+        const fileInfoListAnnouncement: IMetaFileInfoAnnouncement = {
+            name: EMetaMessageName.ANNOUNCE_FILE_INFO_LIST,
+            fileInfoList: fileInfoListOut.value
+        }
+        props.dataChannels.meta.send( JSON.stringify(fileInfoListAnnouncement) );
+        /*const fileInfoAcknowledgeMessage =*/ await pFileInfoListReceivedAcknowledged;
         while(fileInfoListOut.value.every(fileInfo => fileInfo.isDone)) {
-            // const pAcknowledge
-            /**
-             * 1) Create Acknowledge Promise
-             * 2) Send Announcement
-             * 3) Send Data
-             * 4) Wait for Acknowledge Promise
-             */
+            for( const fileInfo of fileInfoListOut.value ) {
+                const file = fileListOut.value[fileInfo.index];
+                for( fileInfo.iCurrentSlice; fileInfo.iCurrentSlice <= fileInfo.iLastSclice; fileInfo.iCurrentSlice++ ) {
+                    const pFileAcknowledge = new Promise<IMetaFileAcknowledge>( res => props.dataChannels.meta.addEventListener('message', evt => {
+                            if (EMetaMessageName.ACKNOWLEDGE_FILE_SLICE_RECEIVED === evt.data.name) {
+                                res(evt.data);
+                                return
+                            }
+                        })
+                    );
+                    const fileAnnouncement: IMetaFileAnnounced = {
+                        name: EMetaMessageName.ANNOUNCE_FILE_SLICE_SENT,
+                        state: {
+                            index: fileInfo.index,
+                            slice: fileInfo.iCurrentSlice
+                        }
+                    };
+                    const slice = 'Test Slice ' + fileInfo.iCurrentSlice;
+                    props.dataChannels.meta.send(JSON.stringify(fileAnnouncement));
+                    props.dataChannels.data.send(slice);
+                    await pFileAcknowledge;
+                }
+            }
         }
     })
 
