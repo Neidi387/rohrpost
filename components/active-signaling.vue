@@ -27,15 +27,19 @@
     const pc = new RTCPeerConnection();
     const dataChannelMeta = pc.createDataChannel('meta');
     const dataChannelData = pc.createDataChannel('data');
-    pc.addEventListener('connectionstatechange', e => {
-        if ( 'connected' === pc.connectionState ) {
+
+    dataChannelData.addEventListener('open', emitIfBothDCOpen);
+    dataChannelMeta.addEventListener('open', emitIfBothDCOpen);
+
+    function emitIfBothDCOpen() {
+        if( 'open' === dataChannelData.readyState && 'open' === dataChannelData.readyState ) {
             emit('datachannels', {
                 meta: dataChannelMeta,
                 data: dataChannelData
             });
-            //debugger
         }
-    });
+    }
+
     pc.addEventListener('icecandidate', e => {
         if (null === e.candidate) {
             return;

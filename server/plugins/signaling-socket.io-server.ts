@@ -4,7 +4,7 @@ import { connectionMap } from "../utils/signaling-socket.io-server/connectionMap
 import { TSignalingMessage } from "../utils/signaling-socket.io-server/TSignalingMessage";
 
 export default defineNitroPlugin(async nitroApp => {
-    const socketServer = new Server( 
+    const socketServer = new Server(
         useRuntimeConfig().public.socketPort, {
         serveClient: false,
         cors: { 
