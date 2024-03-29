@@ -2,7 +2,7 @@
     Received
     <table>
         <thead>
-            <th>Index</th>
+            <th>ID</th>
             <th>Name</th>
             <th>Type</th>
             <th>Size</th>
@@ -12,7 +12,7 @@
         </thead>
         <tbody>
             <tr v-for="fileInfo in fileInfoListIn">
-                <td>{{ fileInfo.index }}</td>
+                <td>{{ fileInfo.id }}</td>
                 <td>{{ fileInfo.name }}</td>
                 <td>{{ fileInfo.type }}</td>
                 <td>{{ fileInfo.size }}</td>
@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
     import { FileInfo } from '~/utils/dataChannel/FileInfo';
-    import { EMetaMessageName, type IMetaFileAcknowledge, type IMetaFileAnnounced, type IMetaFileInfoAcknowledge, type IMetaFileInfoAnnouncement } from '~/utils/dataChannel/IMetaMessage';
+    import { EMetaMessageName, type IMetaFileAcknowledge, type IMetaFileAnnounced, type IMetaFileInfoAcknowledge, type IMetaFileInfoAnnouncement, type IMetaMessage, type TMetaMessage } from '~/utils/dataChannel/IMetaMessage';
     import { blobToObjectURL } from '~/utils/blobToObjectURL';
 
     const props = defineProps<{
@@ -40,31 +40,35 @@
             data: RTCDataChannel,
         }
     }>();
-URL.createObjectURL(new File(['1'], '123'))
+
     const fileInfoListIn = ref<FileInfo[]>([] as FileInfo[]);
     const fileInfoFileMap = ref<Map<FileInfo, File>>(new Map());
 
     props.dataChannels.meta.addEventListener('message', async evt => {
-        if ( EMetaMessageName.ANNOUNCE_FILE_INFO_LIST != evt.data.name ) {
+        const msg: TMetaMessage = JSON.parse(evt.data);
+        if ( EMetaMessageName.ANNOUNCE_FILE_INFO_LIST != msg.name ) {
             return
         };
         const acknowledgeFileInfo: IMetaFileInfoAcknowledge = {
             name: EMetaMessageName.ACKNOWLEDGE_FILE_INFO_LIST,
         };
+        debugger
         props.dataChannels.meta.send(JSON.stringify(acknowledgeFileInfo));
-        fileInfoListIn.value = (evt.data as IMetaFileInfoAnnouncement).fileInfoList;
+        fileInfoListIn.value = (msg as IMetaFileInfoAnnouncement).fileInfoList;
         for( const fileInfo of fileInfoListIn.value ) {
             const buffer = [];
             for( fileInfo.iCurrentSlice; fileInfo.iCurrentSlice <= fileInfo.iLastSclice; fileInfo.iCurrentSlice++ ) {
+                debugger
                 const pSliceAnnouncement: Promise<IMetaFileAnnounced> = new Promise(res => props.dataChannels.meta.addEventListener('message', evt =>{
                     const msg = JSON.parse( evt.data );
                     if( EMetaMessageName.ANNOUNCE_FILE_SLICE_SENT === msg.name ) {
-                        res(JSON.parse( msg ));
+                        res(msg);
                         return
                     }
                 }));
                 const pSlice: Promise<string> = new Promise<string>(res => props.dataChannels.data.addEventListener('message', evt => res(evt.data)));
                 const [announcement, slice] = await Promise.all([pSliceAnnouncement, pSlice]);
+                debugger
                 buffer.push(slice);
                 const acknowledge: IMetaFileAcknowledge = {
                     name: EMetaMessageName.ACKNOWLEDGE_FILE_SLICE_RECEIVED,
@@ -73,8 +77,10 @@ URL.createObjectURL(new File(['1'], '123'))
                         slice: fileInfo.iCurrentSlice
                     },
                 }
+                debugger
                 props.dataChannels.meta.send(JSON.stringify(acknowledge));
             }
+            debugger
             const file = new File(buffer, fileInfo.name, fileInfo);
             fileInfoFileMap.value.set(fileInfo, file);
         }
