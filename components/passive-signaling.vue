@@ -22,6 +22,7 @@
         meta: {} as RTCDataChannel,
         data: {} as RTCDataChannel
     };
+
     pc.addEventListener('datachannel', e => {
         if( 'meta' === e.channel.label ) {
             datachannels.meta = e.channel;
@@ -30,16 +31,12 @@
             datachannels.data = e.channel;
             //debugger;
         }
-        if ( 'send' in datachannels.meta && 'send' in datachannels.data ) {
+        if ( 'send' in datachannels.meta && 'send' in datachannels.data && 'open' === datachannels.meta.readyState && 'open' === datachannels.data.readyState ) {
             //debugger
             emit('datachannels', datachannels);
         }
     });
-    pc.addEventListener('connectionstatechange', e => {
-        if ( 'connected' === pc.connectionState ) {
-            //debugger;
-        }
-    });
+
     pc.addEventListener('icecandidate', e => {
         if (null === e.candidate) {
             return;

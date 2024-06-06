@@ -8,12 +8,8 @@
     <ActiveSignaling v-if="!datachannels && 'active' === role" @datachannels="dcs => datachannels = dcs"></ActiveSignaling>
     <PassiveSignaling v-if="!datachannels && 'passive' === role" @datachannels="dcs => datachannels = dcs"></PassiveSignaling>
     <div v-if="datachannels">
-        <form @submit.prevent="sendMsg">
-            <input type="text" v-model="msg.meta">
-            <input type="text" v-model="msg.data">
-            <input type="submit">
-        </form>
-        <p v-for="msg in received">{{ msg }}</p>
+        <SendFiles :dataChannels="datachannels"></SendFiles>
+        <ReceiveFiles :dataChannels="datachannels"></ReceiveFiles>
     </div>
 </template>
 

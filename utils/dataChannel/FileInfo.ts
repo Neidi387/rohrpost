@@ -1,47 +1,55 @@
 export class FileInfo {
-    static MAX_SLICE_LENGTH = 2 ** 8;
+    static MAX_SLICE_LENGTH = 16 * 8 * 2 ** 10; // 16 KiB
 
     static fromFileList(fileList: FileList): FileInfo[] {
         const FileInfoList: FileInfo[] = [];
-        for (let i = 0; i < fileList.length; i++) {
-            const file = fileList[i];
-            FileInfoList.push(new FileInfo(file, i));
+        for (const file of fileList) {
+            const fileInfo = new FileInfo(
+                'send',
+                file.name,
+                file.type,
+                file.size,
+                file.lastModified,
+                file
+            );
+            FileInfoList.push(fileInfo);
         }
         return FileInfoList
     }
 
     static fromFileInfoStripped( fileInfoStrippedList: IFileInfoStripped[] ) {
         const FileInfoList: FileInfo[] = [];
-        for (let i = 0; i < fileInfoStrippedList.length; i++) {
-            const file = fileInfoStrippedList[i];
-            FileInfoList.push(new FileInfo(file, i));
+        for (const file of fileInfoStrippedList) {
+            const fileInfo = new FileInfo(
+                'receive',
+                file.name,
+                file.type,
+                file.size,
+                file.lastModified,
+                null
+            );
+            FileInfoList.push(fileInfo);
         }
         return FileInfoList
     }
 
-    readonly index: number;
-    readonly name: string;
-    readonly type: string;
-    readonly size: number;
-    readonly lastModified: number;
-
     readonly iLastSclice: number;
     iCurrentSlice = 0;
-    isDone = false;
+    isReadyToTransfer = false;
 
-
-    private constructor(file: File | IFileInfoStripped, index: number) {
-        this.index = index;
-        this.name = file.name;
-        this.type = file.type;
-        this.size = file.size;
-        this.lastModified = file.lastModified;
+    private constructor(
+            readonly mode: 'send' | 'receive',
+            readonly name: string,
+            readonly type: string,
+            readonly size: number,
+            readonly lastModified: number,
+            public file: Blob | null
+    ) {
         this.iLastSclice = Math.ceil(this.size / FileInfo.MAX_SLICE_LENGTH);
     }
 
     toJSON(): string {
         return JSON.stringify({
-            index: this.index,
             name: this.name,
             type: this.type,
             size: this.size,
@@ -49,6 +57,13 @@ export class FileInfo {
         })
     }
 
+    get id(): string {
+        return `name="${this.name}" time="${this.lastModified}"`
+    }
+
+    get isDone(): boolean {
+        return this.iCurrentSlice === this.iLastSclice
+    }
 }
 
 export interface IFileInfoStripped {
@@ -57,4 +72,5 @@ export interface IFileInfoStripped {
     readonly type: string;
     readonly size: number;
     readonly lastModified: number;
+    readonly id: string;
 }
