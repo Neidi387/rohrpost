@@ -1,35 +1,37 @@
- 
 import type { FileInfo } from "./FileInfo";
 
 export enum EMetaMessageName {
-    FILE_INFO_LIST = 'file-info-list',
-    FILE_INFO_LIST_RECEIVED = 'file-info-list-received',
-    FILE_SEND_START = 'file_start_sending',
-    FILE_RECEIVED_END = 'file_finished_receiving',
+    ACKNOWLEDGE_FILE_INFO_LIST = 'acknowledge-file-info-list',
+    ACKNOWLEDGE_FILE_SLICE_RECEIVED = 'acknowledge-file-slice-received',
+    ANNOUNCE_FILE_INFO_LIST = 'announce-file-info-list', // TODO: Better naming. This is no announcement but the actial info or it is the announcement of the files
+    ANNOUNCE_FILE_SLICE_SENT = 'announce-file-slice-sent',
 }
 
-export type TMetaMessage = IFileInfoListMsg | IFileInfoListReceivedMsg | IFileSendStart | IFileReceivedEnd;
-
-interface IMetaMessage {
-    name: EMetaMessageName.FILE_INFO_LIST | EMetaMessageName.FILE_INFO_LIST_RECEIVED | EMetaMessageName.FILE_SEND_START | EMetaMessageName.FILE_RECEIVED_END;
+export interface IMetaMessage {
+    name: 'acknowledge-file-info-list' | 'acknowledge-file-slice-received' | 'announce-file-info-list' | 'announce-file-slice-sent'
 }
 
-export interface IFileInfoListMsg extends IMetaMessage {
-    name: EMetaMessageName.FILE_INFO_LIST;
-    fileInfoList: FileInfo[];
+export interface IMetaFileInfoAcknowledge extends IMetaMessage {
+    name: 'acknowledge-file-info-list';
 }
 
-export interface IFileInfoListReceivedMsg extends IMetaMessage {
-    name: EMetaMessageName.FILE_INFO_LIST_RECEIVED;
-    fileInfoList: FileInfo[];
+export interface IMetaFileAcknowledge extends IMetaMessage {
+    name: 'acknowledge-file-slice-received';
+    state: {
+        index: number;
+        slice: number;
+    };
 }
 
-export interface IFileSendStart extends IMetaMessage {
-    name: EMetaMessageName.FILE_SEND_START;
-    id: string;
+export interface IMetaFileAnnounced extends IMetaMessage {
+    name: 'announce-file-slice-sent';
+    state: {
+        index: number;
+        slice: number;
+    };
 }
 
-export interface IFileReceivedEnd extends IMetaMessage {
-    name: EMetaMessageName.FILE_RECEIVED_END,
-    id: string;
+export interface IMetaFileInfoAnnouncement extends IMetaMessage {
+    name: 'announce-file-info-list',
+    fileInfoList: FileInfo[],
 }
