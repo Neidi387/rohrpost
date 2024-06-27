@@ -13,7 +13,7 @@ export async function onConnectionRegisterPassive( socket: Socket ) {
         active: null,
     };
     connectionMap.set(registry.address, entry);
-    socket.on(ESignaling.ON_LOCAL_MESSAGE, msg => {
-        entry.active?.emit(ESignaling.ON_REMOTE_MESSAGE, msg);
+    socket.on(ESignalingSocketIo.ON_LOCAL_MESSAGE, msg => {
+        entry.active?.emit(ESignalingSocketIo.ON_REMOTE_MESSAGE, msg);
     });
 }

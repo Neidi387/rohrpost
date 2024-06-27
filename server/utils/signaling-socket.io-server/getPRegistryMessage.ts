@@ -3,6 +3,6 @@ import { TSignalingRegistry } from "./TSignalingRegistry";
 
 export function getPRegistryMessage( socket: Socket ): Promise<TSignalingRegistry> {
     return new Promise(res => {
-        socket.on(ESignaling.ON_REGISTER_MESSAGE, res)
+        socket.on(ESignalingSocketIo.ON_REGISTER_MESSAGE, res)
     })
 }

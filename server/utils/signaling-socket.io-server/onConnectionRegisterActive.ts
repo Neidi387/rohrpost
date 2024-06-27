@@ -7,7 +7,8 @@ export async function onConnectionRegisterActive( socket: Socket ) {
         return;
     }
     const entry = connectionMap.get(registry.address);
-    socket.on(ESignaling.ON_LOCAL_MESSAGE, msg => {
-        entry?.passive?.emit(ESignaling.ON_REMOTE_MESSAGE, msg);
+    entry!.active = socket;
+    socket.on(ESignalingSocketIo.ON_LOCAL_MESSAGE, msg => {
+        entry?.passive?.emit(ESignalingSocketIo.ON_REMOTE_MESSAGE, msg);
     });
 }

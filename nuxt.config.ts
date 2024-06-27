@@ -15,8 +15,11 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      socketPort: 3001,
+      socketPort: 3002,
       url: 'http://' + devHost,
+      rtcDataChannel: {
+        maxPacketSize: 16 * 2 ** 10
+      }
     },
   },
   build: {
@@ -46,9 +49,6 @@ export default defineNuxtConfig({
     ]
   },
   routeRules: {
-    'simpleRTCConnectionTest': {ssr: false},
-    'signaling-test-passive': {ssr: false},
-    'signaling-test-active': {ssr: false},
     'first-working-version': {ssr: false},
   },
 })

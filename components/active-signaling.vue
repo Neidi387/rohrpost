@@ -1,73 +1,32 @@
 <template>
-    <h2>Active Signaling</h2>
-    <form @submit.prevent="startSignaling">
-        <label>
-            Adresse
-            <input type="text" v-model="address">
-        </label>
-        <input type="submit">
-    </form>
+    <div>
+        <h2>Active Signaling</h2>
+        <form @submit.prevent="startSignaling">
+            <label>
+                Adresse
+                <input type="text" v-model="address">
+            </label>
+            <input type="submit">
+        </form>
+    </div>
 </template>
 
 <script setup lang="ts">
-    import type { TSignalingMessage } from '~/utils/signaling-socket.io/TSignalingMessage';
-    import type { TSignalingRegistry } from '~/utils/signaling-socket.io/TSignalingRegistry';
-    import { ESignaling } from '~/utils/signaling-socket.io/ESignaling';
+    import type { TSignalingRegistry } from '#build/types/nitro-imports';
+    import { useRtcDataChannel } from '~/composables/useRtcDataChannel';
+    import { ESignalingSocketIo } from "~/utils/signaling-socket.io/ESignalingSocketIo";
 
-    const emit = defineEmits<{
-        (e: 'datachannels', dataChannels: { 
-            meta: RTCDataChannel,
-            data: RTCDataChannel
-        }): void
-    }>();
-    const address = ref();
-    
+    const address = ref('');
+    const {rtcConnectActive} = useRtcDataChannel();
     const {$io} = useNuxtApp();
     $io.connect();
-    const pc = new RTCPeerConnection();
-    const dataChannelMeta = pc.createDataChannel('meta');
-    const dataChannelData = pc.createDataChannel('data');
-
-    dataChannelData.addEventListener('open', emitIfBothDCOpen);
-    dataChannelMeta.addEventListener('open', emitIfBothDCOpen);
-
-    function emitIfBothDCOpen() {
-        if( 'open' === dataChannelData.readyState && 'open' === dataChannelData.readyState ) {
-            emit('datachannels', {
-                meta: dataChannelMeta,
-                data: dataChannelData
-            });
-        }
-    }
-
-    pc.addEventListener('icecandidate', e => {
-        if (null === e.candidate) {
-            return;
-        }
-        $io.emit(ESignaling.ON_LOCAL_MESSAGE, e.candidate );
-        //debugger;
-    });
-    $io.on(ESignaling.ON_REMOTE_MESSAGE, (msg: TSignalingMessage) => {
-        if ( 'sdp' in msg && 'answer' === msg.type ) {
-            pc.setRemoteDescription(msg);
-            //debugger
-        } else if ( 'candidate' in msg ) {
-            pc.addIceCandidate(msg);
-            //debugger
-        }
-    })
-    async function startSignaling() {
-        $io.connect();
-        // alert($io.id);
-        // alert(typeof $io);
-        $io.emit(ESignaling.ON_REGISTER, { role: 'active', address: address.value });
-        //debugger
-        const offer: TSignalingMessage = await pc.createOffer();
-        //debugger
-        $io.emit(ESignaling.ON_LOCAL_MESSAGE, offer);
-        //debugger
-        pc.setLocalDescription(offer);
-        //debugger
+    function startSignaling() {
+        const msg: TSignalingRegistry = {
+            role: 'active',
+            address: address.value,
+        };
+        $io.emit(ESignalingSocketIo.ON_REGISTER_MESSAGE, msg);
+        rtcConnectActive($io);
     }
 </script>
 
