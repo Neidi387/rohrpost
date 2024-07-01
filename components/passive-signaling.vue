@@ -7,21 +7,28 @@
 
 <script setup lang="ts">
     import type { TSignalingRegistry } from '#build/types/nitro-imports';
+import { io } from 'socket.io-client';
     import { useRtcDataChannel } from '~/composables/useRtcDataChannel';
+import { SignalingChannelClass } from '~/utils/rtcSignaling/SignalingChannelClass';
     import { ESignalingSocketIo } from "~/utils/signaling-socket.io/ESignalingSocketIo";
 
 
     const address = ref(getRandomString(5));
     const {rtcConnectPassive} = useRtcDataChannel();
-    const {$io} = useNuxtApp();
+    const config = useRuntimeConfig().public;
+    const socket = io(`${config.url}:${config.socketPort}`, {
+        autoConnect: false
+    });
+    socket.connect();
     const msg: TSignalingRegistry = {
         role: 'passive',
         address: address.value,
     };
-    $io.connect();
+    const signalingChannel = new SignalingChannelClass((msg) => socket.emit(ESignalingSocketIo.ON_LOCAL_MESSAGE, msg));
+    socket.on(ESignalingSocketIo.ON_REMOTE_MESSAGE, (msg) => signalingChannel.dispachNewRemoteMessageEvent(msg));
     setTimeout(() => {
-        $io.emit(ESignalingSocketIo.ON_REGISTER_MESSAGE, msg);
-        rtcConnectPassive($io);
+        socket.emit(ESignalingSocketIo.ON_REGISTER_MESSAGE, msg);
+        rtcConnectPassive(signalingChannel);
     }, 100)
 </script>
 

@@ -1,9 +1,10 @@
 import type { Socket } from "socket.io-client";
 import { ESignalingSocketIo } from "../signaling-socket.io/ESignalingSocketIo";
+import type { SignalingChannelClass } from "./SignalingChannelClass";
 
-export async function sendIceCandidate(socket: Socket, evt: RTCPeerConnectionIceEvent) {
+export async function sendIceCandidate(signalingChannel: SignalingChannelClass, evt: RTCPeerConnectionIceEvent) {
     if (null === evt.candidate) {
         return
     }
-    socket.emit(ESignalingSocketIo.ON_LOCAL_MESSAGE, evt.candidate);
+    signalingChannel.sendToRemote(evt.candidate);
 }
