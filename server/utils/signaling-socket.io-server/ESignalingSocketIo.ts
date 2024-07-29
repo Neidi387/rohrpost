@@ -1,3 +1,3 @@
-import { ESignalingSocketIo } from "~/utils/signaling-socket.io/ESignalingSocketIo";
+import { ESignalingSocketIo } from "~/composables/useSocketIOSignalingChannel/ESignalingSocketIo";
 
 export { ESignalingSocketIo };

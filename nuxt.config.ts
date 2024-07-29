@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      socketPort: 3002,
+      socketPort: 3001,
       url: 'http://' + devHost,
       rtcDataChannel: {
         maxPacketSize: 16 * 2 ** 10

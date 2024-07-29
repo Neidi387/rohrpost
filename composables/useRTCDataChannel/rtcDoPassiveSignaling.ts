@@ -1,10 +1,10 @@
 import type { Socket } from "socket.io-client";
 import { ERtcSignaing } from "./ERtcSignaling";
-import { ESignalingSocketIo } from "../signaling-socket.io/ESignalingSocketIo";
+import { ESignalingSocketIo } from "../../utils/ESignalingSocketIo";
 import { sendIceCandidate } from "./sendIceCandidate";
 import { addIceCandidateEL } from "./addIceCandidateEL";
 import type { TSignalingMessage } from "./TSignalingMessage";
-import type { SignalingChannelClass } from "./SignalingChannelClass";
+import type { SignalingChannelClass } from "../useSocketIOSignalingChannel/SignalingChannelClass";
 
 export async function rtcDoPassiveSignaling(pc: RTCPeerConnection, signalingChannel: SignalingChannelClass) {
     pc.addEventListener('icecandidate', evt => sendIceCandidate(signalingChannel, evt));

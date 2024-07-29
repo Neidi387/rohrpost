@@ -1,6 +1,6 @@
 import type { Socket } from "socket.io-client";
-import { ESignalingSocketIo } from "../signaling-socket.io/ESignalingSocketIo";
-import type { SignalingChannelClass } from "./SignalingChannelClass";
+import { ESignalingSocketIo } from "../../utils/ESignalingSocketIo";
+import type { SignalingChannelClass } from "../useSocketIOSignalingChannel/SignalingChannelClass";
 
 export async function sendIceCandidate(signalingChannel: SignalingChannelClass, evt: RTCPeerConnectionIceEvent) {
     if (null === evt.candidate) {

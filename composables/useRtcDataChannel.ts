@@ -1,9 +1,9 @@
 import type { Socket } from "socket.io-client";
-import { ERtcSignaing } from "~/utils/rtcSignaling/ERtcSignaling";
-import type { SignalingChannelClass } from "~/utils/rtcSignaling/SignalingChannelClass";
-import { getPDataChannel } from "~/utils/rtcSignaling/getPDataChannel";
-import { rtcDoActiveSignaling } from "~/utils/rtcSignaling/rtcDoActiveSignaling";
-import { rtcDoPassiveSignaling } from "~/utils/rtcSignaling/rtcDoPassiveSignaling";
+import { ERtcSignaing } from "~/composables/useRTCDataChannel/ERtcSignaling";
+import type { SignalingChannelClass } from "~/composables/useSocketIOSignalingChannel/SignalingChannelClass";
+import { getPDataChannel } from "~/composables/useRTCDataChannel/getPDataChannel";
+import { rtcDoActiveSignaling } from "~/composables/useRTCDataChannel/rtcDoActiveSignaling";
+import { rtcDoPassiveSignaling } from "~/composables/useRTCDataChannel/rtcDoPassiveSignaling";
 
 const rtcPeerConnection = ref<RTCPeerConnection>();
 const rtcDataChannel = ref<RTCDataChannel>();
