@@ -1,6 +1,7 @@
 import { Socket } from "socket.io";
 import { getPRegistryMessage } from "./getPRegistryMessage";
 import { IEntry } from "./connectionMap";
+import { getOnDisconnectCleanupFun } from "./getOnDisconnectCleanupFun";
 
 export async function onConnectionRegisterPassive( socket: Socket ) {
     const registry = await getPRegistryMessage(socket);
@@ -16,4 +17,5 @@ export async function onConnectionRegisterPassive( socket: Socket ) {
     socket.on(ESignalingSocketIo.ON_LOCAL_MESSAGE, msg => {
         entry.active?.emit(ESignalingSocketIo.ON_REMOTE_MESSAGE, msg);
     });
+    socket.on('disconnect', getOnDisconnectCleanupFun(registry))
 }
