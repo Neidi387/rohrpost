@@ -15,5 +15,4 @@ export default defineNitroPlugin(async nitroApp => {
     } );
     socketServer.on('connection', onConnectionRegisterPassive);
     socketServer.on('connection', onConnectionRegisterActive);
-    socketServer.on('connection', onDisconnectCleanup);
 });
