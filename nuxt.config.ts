@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      socketPort: 3001,
+      longPollingUl: 'http://localhost:api/',
       url: 'http://' + devHost,
       rtcDataChannel: {
         maxPacketSize: 16 * 2 ** 10
@@ -42,11 +42,9 @@ export default defineNuxtConfig({
     }
   },
   plugins: [
-    // './plugins/signaling-socket.io'
   ],
   nitro: {
     plugins: [
-      // './plugins/signaling-socket.io-server'
     ]
   },
   routeRules: {

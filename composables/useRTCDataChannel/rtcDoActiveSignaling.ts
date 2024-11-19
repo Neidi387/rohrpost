@@ -1,6 +1,3 @@
-import type { Socket } from "socket.io-client";
-import { ERtcSignaing } from "./ERtcSignaling";
-import { ESignalingSocketIo } from "../../utils/ESignalingSocketIo";
 import { sendIceCandidate } from "./sendIceCandidate";
 import { addIceCandidateEL } from "./addIceCandidateEL";
 import type { TSignalingMessage } from "./TSignalingMessage";

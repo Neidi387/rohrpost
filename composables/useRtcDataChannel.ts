@@ -1,4 +1,3 @@
-import type { Socket } from "socket.io-client";
 import { ERtcSignaing } from "~/composables/useRTCDataChannel/ERtcSignaling";
 import type { SignalingChannelClass } from "~/composables/useSocketIOSignalingChannel/SignalingChannelClass";
 import { getPDataChannel } from "~/composables/useRTCDataChannel/getPDataChannel";
