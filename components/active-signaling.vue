@@ -12,12 +12,12 @@
 </template>
 
 <script setup lang="ts">
-    import { useRtcDataChannel } from '~/composables/useRtcDataChannel';
-    import { useSocketIOSignalingChannel } from '~/composables/useSocketIOSignalingChannel';
+import { useLongPollingSignalingChannel } from '~/composables/useLongPollingSignalingChannel';
+import { useConnectionStore } from '~/stores/connection';
 
-    const address = ref('');
-    const {rtcConnectActive} = useRtcDataChannel();
-    const {signalingChannel, signalingChannnelAproach, abortSignalingChannnelAproach} = useSocketIOSignalingChannel();
+
+    const {connect} = useLongPollingSignalingChannel();
+    const connectionStore = useConnectionStore();
 
     function startSignaling() {
         signalingChannnelAproach('active', address.value);

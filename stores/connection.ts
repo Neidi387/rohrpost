@@ -6,7 +6,8 @@ export const useConnectionStore = defineStore<'connection', IConnectionStore>({
         const state: IConnectionStore = {
             signaling: {
                 address: '',
-                role: 'passive'
+                role: 'passive',
+                isConnected: false
             },
             rtcConnection: {
                 peerConnection: null,
@@ -21,6 +22,7 @@ interface IConnectionStore {
     signaling: {
         address: string;
         role: 'passive' | 'active';
+        isConnected: boolean;
     };
     rtcConnection: {
         peerConnection: RTCPeerConnection | null;
