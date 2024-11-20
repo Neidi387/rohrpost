@@ -15,8 +15,4 @@ export class SignalingChannelClass {
         this.newRemoteMessageListeners.push(listener);
     }
 
-    close() {
-        
-    }
-
 }

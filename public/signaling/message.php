@@ -32,10 +32,7 @@
             'active' => 'passive',
             'passive' => 'active',
         };
-        $fullIMessageStackTailFilename = "rooms/$request->address/i_message_stack_tail_for_$recipientRole.txt";
-        $iMessageStackTail = file_get_contents($fullIMessageStackTailFilename);
-        file_put_contents("rooms/$request->address/message_for_{$recipientRole}_$iMessageStackTail.txt", $request->message);
-        file_put_contents($fullIMessageStackTailFilename, $iMessageStackTail + 1);
+        file_put_contents("rooms/$request->address/message_for_{$recipientRole}_$request->i_message.txt", $request->message);
         die();
     }
 

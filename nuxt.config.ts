@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      longPollingUl: 'http://localhost:api/',
+      signaling: 'http://localhost:api/',
       url: 'http://' + devHost,
       rtcDataChannel: {
         maxPacketSize: 16 * 2 ** 10
