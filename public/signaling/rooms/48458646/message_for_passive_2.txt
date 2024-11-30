@@ -1,0 +1,1 @@
+{"candidate":"candidate:3622584344 1 udp 2113939711 862e2554-4c19-4e31-b481-3125ecec45a9.local 53374 typ host generation 0 ufrag iG3n network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"iG3n"}

@@ -1,14 +1,61 @@
-import { stringifyQuery } from "vue-router";
-import { useConnectionStore } from "~/stores/connection";
 
-const apiUrl = useRuntimeConfig().public.longPollingUrl;
+const apiUrl = useRuntimeConfig().public.signaling;
 
-const messageListeners: ((message: object) => void)[] = []
-const iMessage = ref({
-    sent: 0,
-    received: 0,
+const _messageListeners: ((message: object) => void)[] = []
+
+const state = reactive({
+    iMessage: {
+        sent: 0,
+        received: 0,
+    },
+    isConnected: false,
 });
-const connectionStore = useConnectionStore();
+
+// private
+const peerInfo = reactive<IPeerInfo>({
+    address: '',
+    role: 'active',
+});
+
+const role = computed({
+    get(): TRole {
+        return peerInfo.role
+    },
+    set(val: TRole) {
+        if (state.isConnected) {
+            return
+        } else {
+            peerInfo.role = val;
+        }
+    }
+})
+
+
+const address = computed({
+    get(): string {
+        return peerInfo.address
+    },
+    set(val: string) {
+        if (state.isConnected) {
+            return
+        } else {
+            peerInfo.address = val;
+        }
+    }
+})
+
+const isConnected = computed({
+    get(): boolean {
+        return state.isConnected
+    },
+    set(val: boolean) {
+        state.isConnected = val;
+        if (true === val) {
+            state.iMessage.received = 0;
+            state.iMessage.sent = 0;
+        }
+    }
+});
 
 export function useLongPollingSignalingChannel(): ILongPollingSignalingChannel {
     return {
@@ -16,7 +63,9 @@ export function useLongPollingSignalingChannel(): ILongPollingSignalingChannel {
         sendMessage,
         addMessageListener,
         connect,
-        disconnect,
+        role,
+        address,
+        isConnected,
     }
 }
 
@@ -25,68 +74,93 @@ interface ILongPollingSignalingChannel {
     sendMessage: (message: object) => void;
     addMessageListener: (listener: (message: object) => void) => void;
     connect: () => void;
-    disconnect: () => void;
+    role: Ref<TRole>;
+    address: Ref<string>;
+    isConnected: Ref<boolean>;
 }
 
 async function openRoom() {
-    const {address} = await fetch(useRuntimeConfig().public.longPollingUrl + 'room', {
+    if (state.isConnected) {
+        throw Error('Please disconnect first');
+    }
+    const {address: newAddress} = await fetch(apiUrl + 'room.php', {
         method: 'POST'
     }).then(res => res.json());
-    connectionStore.signaling.address = address
+    peerInfo.address = newAddress;
 }
 
-async function sendMessage() {
-    await fetch(apiUrl + 'message', {
+async function sendMessage(message: object) {
+    if (false === state.isConnected) {
+        throw Error('Please connect first');
+    }
+    await fetch(apiUrl + 'message.php', {
         method: 'POST',
         body: JSON.stringify({
-            i_message: iMessage.value.sent++
+            i_message: state.iMessage.sent++,
+            message: message,
+            address: peerInfo.address,
+            role: peerInfo.role,
         })
     })
 }
 
 async function addMessageListener(fun: (message: object) => void) {
-    
-    messageListeners.push(fun);
+    _messageListeners.push(fun);
 }
 
 async function connect() {
-    if (true === connectionStore.signaling.isConnected) {
+    if (true === state.isConnected) {
         throw Error('Already connected');
     }
-    while( connectionStore.signaling.isConnected ) {
-        if( false === connectionStore.signaling.isConnected ) {
-            break;
+    state.isConnected = true;
+    setTimeout(async () => {
+        while( state.isConnected ) {
+            // @ts-ignore
+            if( false === state.isConnected ) {
+                break;
+            }
+            const params = new URLSearchParams({
+                address: peerInfo.address,
+                role: peerInfo.role,
+                i_message: String(state.iMessage.received),
+                seconds_to_wait: '2',
+            });
+            const response = await fetch(apiUrl + 'message.php' + '?' + params.toString());
+            const {message, status} = await response.json();
+            if ( 404 === response.status && 'message not found' === status ) {
+                console.log('message not there yet, retry');
+                continue;
+            } else if (false === response.ok) {
+                console.error('Invalid Response', response, message, status);
+                break;
+            }
+            _messageListeners.forEach(fun => fun(message));
+            state.iMessage.received++;
         }
-        const params = new URLSearchParams({
-            role: connectionStore.signaling.role,
-            i_message: String(iMessage.value.received),
-            seconds_to_wait: '2',
-        });
-        const response = await fetch(apiUrl + 'message' + params.toString());
-        const {message, staus} = await response.json();
-        if ( 404 === response.status && 'message not found' === status ) {
-            continue;
-        }
-        if (false === response.ok) {
-            console.error('Invalid Response', response, message, status);
-            break;
-        }
-        messageListeners.forEach(fun => fun(message));
-        iMessage.value.received++;
+    })
+    return
+}
+
+watch(state, async (newState, oldState) => {
+    if (false === newState.isConnected && true === oldState.isConnected) {
+        const response = await fetch( apiUrl + 'room.php', {
+            method: 'DELETE',
+            body: JSON.stringify({
+                address: peerInfo.address,
+            })
+        } ).then(res => res.json());
     }
-    
-}
+})
 
-async function disconnect() {
-    // ??? Komplett Resetten? Was wenn noch eine Nachricht unterwegs ist. Wann brauche ich ein Disconnecteten Signaling Service? Ja, anstatt jetzt on off zu implementieren, einfach das gesamte Signaling neu starten
-    connectionStore.signaling.isConnected = false;
-    const response = await fetch( apiUrl + 'room', {
-        method: 'DELETE',
-        body: JSON.stringify({
-            address: connectionStore.signaling.address,
-        })
-    } ).then(res => res.json());
-    iMessage.value.received = 
-    iMessage.value.sent = 0;
-}
+watch(peerInfo, (newPeerInfo, oldPeerInfo) => {
+    if (newPeerInfo.role !== oldPeerInfo.role) {
+        peerInfo.address = '';
+    }
+})
 
+type TRole = 'active' | 'passive'
+
+interface IPeerInfo {
+    role: TRole;
+    address: string;
+}

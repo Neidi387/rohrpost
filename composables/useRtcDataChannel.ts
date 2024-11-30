@@ -2,44 +2,46 @@ import { ERtcSignaing } from "~/composables/useRTCDataChannel/ERtcSignaling";
 import { getPDataChannel } from "~/composables/useRTCDataChannel/getPDataChannel";
 import { rtcDoActiveSignaling } from "~/composables/useRTCDataChannel/rtcDoActiveSignaling";
 import { rtcDoPassiveSignaling } from "~/composables/useRTCDataChannel/rtcDoPassiveSignaling";
-import { useConnectionStore } from "~/stores/connection";
 import { useLongPollingSignalingChannel } from "./useLongPollingSignalingChannel";
 
-const connectionStore = useConnectionStore();
-const {disconnect} = useLongPollingSignalingChannel()M
+const peerConnection = ref<RTCPeerConnection | null>(null);
+const dataChannel = ref<RTCDataChannel | null>(null);
 
 export function useRtcDataChannel() {
     return {
         connect,
+        peerConnection,
+        dataChannel,
     }
 }
 
 async function connect() {
-    if (false === connectionStore.signaling.isConnected) {
+    const {isConnected: isSignalingConnected, role} = useLongPollingSignalingChannel();
+    if (false === isSignalingConnected.value) {
         throw Error('Signaling is not connected');
     }
-    if ('active' === connectionStore.signaling.role) {
+    if ('active' === role.value) {
         await connectActive();
     }
-    if ('passive' === connectionStore.signaling.role) {
+    if ('passive' === role.value) {
         await connectPassive();
     }
-    // disconnect();
 }
 
 async function connectActive() {
     const pc = new RTCPeerConnection();
     const dc = pc.createDataChannel(ERtcSignaing.DATACHANNEL_LABEL);
     await rtcDoActiveSignaling(pc);
-    connectionStore.rtcConnection.peerConnection = pc;
-    connectionStore.rtcConnection.dataChannel = dc;
+    peerConnection.value = pc;
+    dataChannel.value = dc;
 }
 
 async function connectPassive() {
+    const connectionStore = useConnectionStore();
     const pc = new RTCPeerConnection();
     const pDc = getPDataChannel(pc);
     await rtcDoPassiveSignaling(pc);
     const dc = await pDc;
-    connectionStore.rtcConnection.peerConnection = pc;
-    connectionStore.rtcConnection.dataChannel = dc;
+    peerConnection.value = pc;
+    dataChannel.value = dc;
 }

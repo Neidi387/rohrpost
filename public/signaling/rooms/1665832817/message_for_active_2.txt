@@ -1,0 +1,1 @@
+{"candidate":"candidate:1092083661 1 udp 2113939711 31c2c5f0-0bd7-4c5a-9577-dcffb96dab41.local 56242 typ host generation 0 ufrag hjd2 network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"hjd2"}

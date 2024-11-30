@@ -22,11 +22,11 @@
         lastModified: number,
     }>();
 
-    const {rtcDataChannel} = useRtcDataChannel();
+    const {dataChannel} = useRtcDataChannel();
 
     const href = ref();
     
-    rtcDataChannel.value?.addEventListener('message', async evt => {
+    dataChannel.value?.addEventListener('message', async evt => {
         if ( 'string' !== typeof evt.data || false === /^Metadata:/.test(evt.data) ) {
             return
         }
@@ -40,7 +40,7 @@
         const slices: ArrayBuffer[] = [];
         let resolvePDone: () => void;
         const pDone = new Promise<void>(res => resolvePDone = res);
-        rtcDataChannel.value?.addEventListener('message', evt => {
+        dataChannel.value?.addEventListener('message', evt => {
             if( isDone ) {
                 return
             }

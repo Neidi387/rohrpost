@@ -1,4 +1,6 @@
 <?php 
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: *");
     $string = file_get_contents('php://input');
     $request = json_decode($string);
     if ('POST' == $_SERVER['REQUEST_METHOD']) {

@@ -1,5 +1,8 @@
 <?php
     const GET_MESSAGE_INTERVALL_MS = 200;
+
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: *");
     
     if ( 'GET' == $_SERVER['REQUEST_METHOD'] ) {
         $request = [];
@@ -13,7 +16,7 @@
                 $message = file_get_contents($fullMessageFilename);
                 $response = [
                     'status' => 'ok',
-                    'message' => $message,
+                    'message' => json_decode($message),
                 ];
                 die(json_encode($response));
             }
@@ -32,7 +35,7 @@
             'active' => 'passive',
             'passive' => 'active',
         };
-        file_put_contents("rooms/$request->address/message_for_{$recipientRole}_$request->i_message.txt", $request->message);
+        file_put_contents("rooms/$request->address/message_for_{$recipientRole}_$request->i_message.txt", json_encode($request->message));
         die();
     }
 

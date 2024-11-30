@@ -3,9 +3,8 @@ import { addIceCandidateEL } from "./addIceCandidateEL";
 import type { TSignalingMessage } from "./TSignalingMessage";
 import { useLongPollingSignalingChannel } from "../useLongPollingSignalingChannel";
 
-const {sendMessage, addMessageListener} = useLongPollingSignalingChannel();
-
 export async function rtcDoActiveSignaling(pc: RTCPeerConnection) {
+    const {sendMessage, addMessageListener} = useLongPollingSignalingChannel();
     pc.addEventListener('icecandidate', sendIceCandidate);
     addMessageListener(msg => addIceCandidateEL(pc, msg));
     const pAnswer = new Promise<RTCSessionDescriptionInit>(res => addMessageListener((msg: TSignalingMessage) => {

@@ -6,22 +6,22 @@
 </template>
 
 <script setup lang="ts">
-    import { useRtcDataChannel } from '~/composables/useRtcDataChannel';
-import { useSocketIOSignalingChannel } from '~/composables/useSocketIOSignalingChannel';
+    import { useLongPollingSignalingChannel } from '~/composables/useLongPollingSignalingChannel';
+import { useRtcDataChannel } from '~/composables/useRtcDataChannel';
 
+const {openRoom, connect: connectSignaling, isConnected: isSignalingConnected, role, address} = useLongPollingSignalingChannel();
+const {connect: connectRtc} = useRtcDataChannel();
 
-    const address = ref(getRandomString(5));
-    const {rtcConnectPassive} = useRtcDataChannel();
-    const {signalingChannel, signalingChannnelAproach, abortSignalingChannnelAproach} = useSocketIOSignalingChannel();
+    role.value = 'passive';
 
-    onMounted( () => {
-        signalingChannnelAproach('passive', address.value);
-    } );
+    onBeforeMount(async () => {
+        await openRoom();
+        await connectSignaling();
+        await connectRtc();
+    });
 
-    watch(signalingChannel, () => {
-        if (null === signalingChannel.value) 
-            return;
-        rtcConnectPassive(signalingChannel.value);
+    onUnmounted(async () => {
+        isSignalingConnected.value = false;
     })
 
 </script>

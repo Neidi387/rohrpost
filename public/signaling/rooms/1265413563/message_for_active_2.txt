@@ -1,0 +1,1 @@
+{"candidate":"candidate:2835711990 1 udp 2113939711 cca5984f-313a-4c9c-89f2-7f6cafd336aa.local 39139 typ host generation 0 ufrag Gy9S network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"Gy9S"}

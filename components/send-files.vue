@@ -10,7 +10,7 @@
 <script lang="ts" setup>
     import { useRtcDataChannel } from '~/composables/useRtcDataChannel';
 
-    const {rtcDataChannel} = useRtcDataChannel();
+    const {dataChannel} = useRtcDataChannel();
 
     const progress = ref<{
         sliceCount: number,
@@ -38,7 +38,7 @@
             type: file.type,
             lastModified: file.lastModified,
         };
-        rtcDataChannel.value?.send(`Metadata:${JSON.stringify(metaData.value)}`);
+        dataChannel.value?.send(`Metadata:${JSON.stringify(metaData.value)}`);
         progress.value = {
             iCurrentSlice: 0,
             sliceCount: Math.ceil(file.size / sliceSize)
@@ -50,7 +50,7 @@
             const pArrayBuffer = file.slice(sliceFrom, sliceTo).arrayBuffer();
             const arrayBuffer = await pArrayBuffer;
             await pReady;
-            rtcDataChannel.value?.send(arrayBuffer);
+            dataChannel.value?.send(arrayBuffer);
         }
         fileInput.value.value = '';
         updateKey.value++;
@@ -58,7 +58,7 @@
 
     function getPChannelReadyForNextSlice() {
         return new Promise(res => {
-            rtcDataChannel.value?.addEventListener('bufferedamountlow', res);
+            dataChannel.value?.addEventListener('bufferedamountlow', res);
         });
     }
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>Active Signaling</h2>
-        <form @submit.prevent="startSignaling">
+        <form @submit.prevent="connect">
             <label>
                 Adresse
                 <input type="text" v-model="address">
@@ -13,21 +13,21 @@
 
 <script setup lang="ts">
 import { useLongPollingSignalingChannel } from '~/composables/useLongPollingSignalingChannel';
-import { useConnectionStore } from '~/stores/connection';
 
+    const {connect: connectSignaling, isConnected: isSignalingConnected, role, address} = useLongPollingSignalingChannel();
+    const {connect: connectRtc} = useRtcDataChannel();
 
-    const {connect} = useLongPollingSignalingChannel();
-    const connectionStore = useConnectionStore();
+    role.value = 'active';
 
-    function startSignaling() {
-        signalingChannnelAproach('active', address.value);
+    async function connect() {
+        await connectSignaling();
+        await connectRtc();
     }
 
-    watch(signalingChannel, () => {
-        if (null === signalingChannel.value) 
-            return;
-        rtcConnectActive(signalingChannel.value);
+    onUnmounted(async () => {
+        isSignalingConnected.value = false;
     })
+
 </script>
 
 <style scoped>

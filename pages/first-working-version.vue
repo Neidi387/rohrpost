@@ -1,25 +1,44 @@
 <template>
-    <div>
-        <button v-if="!role" @click="role = 'active'">Active</button>
+    <label>
+        {{ role }}
+        <input type="checkbox" v-model="isActive">
+    </label>
+    <div v-if="!dataChannel">
+        <ActiveSignaling v-if="'active' === role"></ActiveSignaling>
+        <PassiveSignaling v-if="'passive' === role"></PassiveSignaling>
     </div>
-    <div>
-        <button v-if="!role" @click="role = 'passive'">Passive</button>
-    </div>
-    <div v-if="!rtcDataChannel">
-        <ActiveSignaling v-if="!rtcDataChannel && 'active' === role"></ActiveSignaling>
-        <PassiveSignaling v-if="!rtcDataChannel && 'passive' === role"></PassiveSignaling>
-    </div>
-    <div v-if="rtcDataChannel">
+    <div v-if="dataChannel">
         <SendFiles></SendFiles>
         <ReceiveFiles></ReceiveFiles>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { useRtcDataChannel } from '~/composables/useRtcDataChannel';
 
-    const role = ref<'active' | 'passive'>(useRoute().query.role ?? '');
-    const {rtcDataChannel} = useRtcDataChannel();
+    const route = useRoute();
+    const {role} = useLongPollingSignalingChannel();
+    const {dataChannel} = useRtcDataChannel();
+
+    const isActive = computed({
+        get(): boolean {
+            return 'active' === role.value
+        },
+        set(isActive: boolean) {
+            if (isActive) {
+                role.value = 'active';
+            } else {
+                role.value = 'passive';
+            }
+        }
+    })
+
+    if ('active' === route.query.role || 
+        'passive' === route.query.role) {
+        role.value = route.query.role
+    }
+
+
+
 
 </script>
 

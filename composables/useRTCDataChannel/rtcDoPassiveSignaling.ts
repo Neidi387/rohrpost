@@ -1,12 +1,10 @@
 import { sendIceCandidate } from "./sendIceCandidate";
 import { addIceCandidateEL } from "./addIceCandidateEL";
 import type { TSignalingMessage } from "./TSignalingMessage";
-import type { SignalingChannelClass } from "../useSocketIOSignalingChannel/SignalingChannelClass";
 import { useLongPollingSignalingChannel } from "../useLongPollingSignalingChannel";
 
-const {sendMessage, addMessageListener} = useLongPollingSignalingChannel();
-
 export async function rtcDoPassiveSignaling(pc: RTCPeerConnection) {
+    const {sendMessage, addMessageListener} = useLongPollingSignalingChannel();
     pc.addEventListener('icecandidate', sendIceCandidate);
     addMessageListener(msg => addIceCandidateEL(pc, msg));
     const offer = await new Promise<RTCSessionDescriptionInit>(res => addMessageListener((msg: TSignalingMessage) => {

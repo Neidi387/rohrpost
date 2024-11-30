@@ -1,5 +1,4 @@
 import { useLongPollingSignalingChannel } from "../useLongPollingSignalingChannel";
-import type { SignalingChannelClass } from "../useSocketIOSignalingChannel/SignalingChannelClass";
 
 const {sendMessage} = useLongPollingSignalingChannel();
 
