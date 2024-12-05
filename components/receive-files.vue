@@ -46,7 +46,7 @@
             }
             if ( false === evt.data instanceof ArrayBuffer ) {
                 return
-            }
+            }isDone
             slices[progress.value!.iCurrentSlice++] = evt.data;
             isDone = progress.value!.iCurrentSlice === progress.value!.sliceCount;
             if (isDone) {
