@@ -20,9 +20,7 @@
     "@mdi/font": "^7.3.67",
     "@pinia/nuxt": "^0.7.0",
     "nuxt": "^3.14.1592",
-    "pinia": "^2.2.6",
-    "socket.io": "^4.7.4",
-    "socket.io-client": "^4.7.4"
+    "pinia": "^2.2.6"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
   "overrides": {
