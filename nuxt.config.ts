@@ -9,6 +9,7 @@ console.log('Dev Host: ' + devHost);
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  ssr: false,
 
   devServer: {
     host: '0.0.0.0',
@@ -17,7 +18,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      signaling: 'http://localhost/signaling/',
+      signaling: `http://${devHost}/signaling/`,
       url: 'http://' + devHost,
       rtcDataChannel: {
         maxPacketSize: 16 * 2 ** 10 // 16384
@@ -51,6 +52,7 @@ export default defineNuxtConfig({
   ],
 
   nitro: {
+    static: true,
     plugins: [
     ]
   },

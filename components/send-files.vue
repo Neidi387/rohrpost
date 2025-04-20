@@ -4,12 +4,18 @@
         <input :key="updateKey" multiple ref="fileInput" type="file" @input="sendFile">
         <ul>
             <li v-for="file in fileStore.send">
-                <br>
-                <progress
-                    v-if="'progress' === file.state"
-                    min="0"
-                    max="100"
-                    :value="progress?.percentage"></progress>
+                <ul>
+                    <li>
+                        {{ file.meta.name }}
+                    </li>
+                    <li>
+                        <progress
+                            v-if="'progress' === file.state"
+                            min="0"
+                            max="100"
+                            :value="progress?.percentage"></progress>
+                    </li>
+                </ul>                
             </li>
         </ul>
     </div>

@@ -1,0 +1,1 @@
+{"candidate":"candidate:3222557907 1 udp 2113939711 92d89693-e084-47ac-adf7-6adb2ed82fd8.local 58636 typ host generation 0 ufrag fcaM network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"fcaM"}

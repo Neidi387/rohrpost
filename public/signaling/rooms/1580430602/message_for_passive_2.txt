@@ -1,0 +1,1 @@
+{"candidate":"candidate:3561990059 1 udp 2113939711 2003:d8:1740:fd00:81:26bb:7e59:3460 40485 typ host generation 0 ufrag vdGy network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"vdGy"}

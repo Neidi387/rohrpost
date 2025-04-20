@@ -3,13 +3,21 @@
         <h1>Erhaltenes File</h1>
         <ul>
             <li v-for="file in fileStore.receive">
-                <br>
-                <progress
-                    v-if="'progress' === file.state"
-                    min="0"
-                    max="100"
-                    :value="progress?.percentage"></progress>
-                <a v-if="file.file" :href="getObjectUrl(file.file)" :download="file.meta.name">{{ file.meta.name }}</a>
+                <ul>
+                    <li>
+                        {{ file.meta.name }}
+                    </li>
+                    <li>
+                        <progress
+                            v-if="'progress' === file.state"
+                            min="0"
+                            max="100"
+                            :value="progress?.percentage"></progress>
+                    </li>
+                    <li>
+                        <a v-if="file.file" :href="getObjectUrl(file.file)" :download="file.meta.name">{{ file.meta.name }}</a>
+                    </li>
+                </ul>                
             </li>
         </ul>
     </div>
