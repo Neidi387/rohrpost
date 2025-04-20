@@ -20,6 +20,7 @@ async function connect() {
     if (false === isSignalingConnected.value) {
         throw Error('Signaling is not connected');
     }
+    // If isConnected changes, abort
     if ('active' === role.value) {
         await connectActive();
     }
@@ -37,7 +38,6 @@ async function connectActive() {
 }
 
 async function connectPassive() {
-    const connectionStore = useConnectionStore();
     const pc = new RTCPeerConnection();
     const pDc = getPDataChannel(pc);
     await rtcDoPassiveSignaling(pc);

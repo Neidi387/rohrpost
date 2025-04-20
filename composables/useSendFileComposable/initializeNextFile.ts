@@ -1,5 +1,5 @@
 import type { IFileStore } from "~/stores/files";
-import { getMetaMessage } from "./getMetaMessage";
+import { createMetaMessage } from "./createMetaMessage";
 import type { I_State } from "../useSendFileComposable";
 
 export function initializeNextFile(filesStore: IFileStore, dataChannel: RTCDataChannel, MAX_SLICE_SIZE: number, _state: I_State) {
@@ -17,6 +17,6 @@ export function initializeNextFile(filesStore: IFileStore, dataChannel: RTCDataC
         iSlice: 0,
         file: nextFile.file,
     }
-    const metaMessage = getMetaMessage([nextFile]);
+    const metaMessage = createMetaMessage([nextFile]);
     dataChannel.send(metaMessage);
 }

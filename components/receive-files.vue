@@ -1,63 +1,40 @@
 <template>
     <div>
         <h1>Erhaltenes File</h1>
-        <p v-if="progress">Slice {{ progress.iCurrentSlice }} / {{ progress.sliceCount }}</p>
-        <a v-if="href" :href="href" download>{{ metaData?.name }}</a>
-        <progress v-if="progress" min="0" :max="progress.sliceCount" :value="progress.iCurrentSlice"></progress>
+        <ul>
+            <li v-for="file in fileStore.receive">
+                <br>
+                <progress
+                    v-if="'progress' === file.state"
+                    min="0"
+                    max="100"
+                    :value="progress?.percentage"></progress>
+                <a v-if="file.file" :href="getObjectUrl(file.file)" :download="file.meta.name">{{ file.meta.name }}</a>
+            </li>
+        </ul>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { useRtcDataChannel } from '~/composables/useRtcDataChannel';
+    import { useReceiveFileComposable } from '~/composables/useReceiveFileComposable';
+    import { useFilesStore } from '~/stores/files';
 
-    const progress = ref<{
-        sliceCount: number,
-        iCurrentSlice: number,
-    }>();
+    const fileStore = useFilesStore();
+    const {listen, unlisten, progress} = useReceiveFileComposable();
 
-    const metaData = ref<{
-        name: string,
-        size: number,
-        type: string,
-        lastModified: number,
-    }>();
+    const activeFile = computed(() => fileStore.receive.find(file => file.state === 'progress'));    
 
-    const {dataChannel} = useRtcDataChannel();
+    function getObjectUrl(file: File): string {
+        return URL.createObjectURL(file);
+    }
 
-    const href = ref();
-    
-    dataChannel.value?.addEventListener('message', async evt => {
-        if ( 'string' !== typeof evt.data || false === /^Metadata:/.test(evt.data) ) {
-            return
-        }
-        const metaDataJson = evt.data.replace(/^Metadata:/, '');
-        metaData.value = JSON.parse(metaDataJson);
-        progress.value = {
-            iCurrentSlice: 0,
-            sliceCount: Math.ceil(metaData.value!.size / useRuntimeConfig().public.rtcDataChannel.maxPacketSize),
-        };
-        let isDone = false;
-        const slices: ArrayBuffer[] = [];
-        let resolvePDone: () => void;
-        const pDone = new Promise<void>(res => resolvePDone = res);
-        dataChannel.value?.addEventListener('message', evt => {
-            if( isDone ) {
-                return
-            }
-            if ( false === evt.data instanceof ArrayBuffer ) {
-                return
-            }isDone
-            slices[progress.value!.iCurrentSlice++] = evt.data;
-            isDone = progress.value!.iCurrentSlice === progress.value!.sliceCount;
-            if (isDone) {
-                resolvePDone();
-            }
-        });
-        await pDone;
-        const file = new File(slices, metaData.value!.name, metaData.value );
-        href.value = URL.createObjectURL(file);
-    })
+    onMounted(() => {
+        listen();
+    });
 
+    onUnmounted(() => {
+        unlisten();
+    });
 </script>
 
 <style scoped>

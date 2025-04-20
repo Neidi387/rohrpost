@@ -20,7 +20,7 @@ export default defineNuxtConfig({
       signaling: 'http://localhost/signaling/',
       url: 'http://' + devHost,
       rtcDataChannel: {
-        maxPacketSize: 16 * 2 ** 10
+        maxPacketSize: 16 * 2 ** 10 // 16384
       }
     },
   },

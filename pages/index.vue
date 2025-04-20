@@ -1,58 +1,40 @@
 <template>
     Ich bin die Page
     <router-link to="first-working-version">First Working Version</router-link>
-    <label>
-        Block
-        <input type="checkbox" v-model="isBlocked">
-    </label>
-
-    <label>
-        Role
-        <input type="text" v-model="text">
-    </label>
-
-    <ul>
-        <li>    isBlocked: {{ isBlocked ? 'Ja' : 'Nein' }}</li>
-        <li>text: {{ text }}</li>
-    </ul>
-
-    <button @click="setText">Set text</button>
-    
+    <br><br>
+    <button v-on:click="toggle">toggle</button>
+    {{ role }}
 </template>
 
 <script setup lang="ts">
 
-const isBlocked = ref(false);
+    const _role = ref('passive');
+    let inProgress = false;
 
-const peerInfo = {
-    text: 'Initial Text',
-};
-
-const text = computed({
-    get(): string {
-        return peerInfo.text
-    },
-    set(val: string) {
-        if (isBlocked.value) {
-            return
+    const role = computed({
+        get: () => {
+            return _role.value
+        },
+        set: (val: string) => {
+            if (inProgress) {
+                return;
+            }
+            setTimeout(() => {
+                _role.value = val;
+                inProgress = false;
+            }, 5000)
         }
-        peerInfo.text = val
+    })
+
+    function toggle() {
+        if (role.value === 'active') {
+            debugger
+            role.value = 'passive';
+        } else {
+            debugger
+            role.value = 'active';
+        }
     }
-});
-
-function setText() {
-    text.value = 'Mein neuer Text';
-    console.log(text.value);
-}
-
-setInterval(() => {
-    isBlocked.value = true;
-}, 1000 );
-
-watch(isBlocked, () => {
-    console.log(isBlocked.value);
-    alert('New Value: ' + (isBlocked.value ? 'T' : 'F'));
-})
 
 </script>
 <style scoped>

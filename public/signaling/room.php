@@ -14,6 +14,14 @@
         ];
         die(json_encode($response));
     } else if ( 'DELETE' == $_SERVER['REQUEST_METHOD'] ) {
+        // TODO: Sanitize address. E.G. ""
+        if ('' === $request->address) {
+            http_response_code(400);
+            $response = [
+                'status' => 'address is empty',
+            ];
+            die(json_encode($response));
+        }
         $folderFilename = "rooms/$request->address";
         if (false === file_exists($folderFilename)) {
             http_response_code(404);

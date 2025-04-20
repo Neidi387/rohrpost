@@ -1,1 +1,0 @@
-{"candidate":"candidate:3601057088 1 udp 2113939711 33d45125-f228-459a-8c06-4b6212a0cc6d.local 41390 typ host generation 0 ufrag xgum network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"xgum"}

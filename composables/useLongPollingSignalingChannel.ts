@@ -17,16 +17,16 @@ const peerInfo = reactive<IPeerInfo>({
     role: 'active',
 });
 
+
 const role = computed({
     get(): TRole {
         return peerInfo.role
     },
-    set(val: TRole) {
-        if (state.isConnected) {
-            return
-        } else {
-            peerInfo.role = val;
+    async set(val: TRole) {
+        if ( val !== peerInfo.role ) {
+            await reset();
         }
+        peerInfo.role = val;
     }
 })
 
@@ -44,17 +44,8 @@ const address = computed({
     }
 })
 
-const isConnected = computed({
-    get(): boolean {
-        return state.isConnected
-    },
-    set(val: boolean) {
-        state.isConnected = val;
-        if (true === val) {
-            state.iMessage.received = 0;
-            state.iMessage.sent = 0;
-        }
-    }
+const isConnected = computed(() => {
+    return state.isConnected
 });
 
 export function useLongPollingSignalingChannel(): ILongPollingSignalingChannel {
@@ -87,6 +78,7 @@ async function openRoom() {
         method: 'POST'
     }).then(res => res.json());
     peerInfo.address = newAddress;
+    console.log('OpenRoom finished', newAddress);
 }
 
 async function sendMessage(message: object) {
@@ -141,22 +133,17 @@ async function connect() {
     return
 }
 
-watch(state, async (newState, oldState) => {
-    if (false === newState.isConnected && true === oldState.isConnected) {
-        const response = await fetch( apiUrl + 'room.php', {
-            method: 'DELETE',
-            body: JSON.stringify({
-                address: peerInfo.address,
-            })
-        } ).then(res => res.json());
-    }
-})
-
-watch(peerInfo, (newPeerInfo, oldPeerInfo) => {
-    if (newPeerInfo.role !== oldPeerInfo.role) {
-        peerInfo.address = '';
-    }
-})
+async function reset() {
+    // await new Promise(res => setTimeout(res, 1000));
+    state.isConnected = false;
+    const response = await fetch( apiUrl + 'room.php', {
+        method: 'DELETE',
+        body: JSON.stringify({
+            address: peerInfo.address,
+        })
+    } ).then(res => res.json());
+    peerInfo.address = '';
+}
 
 type TRole = 'active' | 'passive'
 
@@ -164,3 +151,16 @@ interface IPeerInfo {
     role: TRole;
     address: string;
 }
+
+// const canRoleBeChanged = computed( () => {
+//     if ( 'active' === role.value  ) {
+//         return !state.isConnected
+//     } if ( 'passive' === role.value ) {
+//         // Necessary for allowing toggle away from passive
+//         if ( 0 === state.iMessage.received ) {
+//             return true
+//         } else {
+//             return !state.isConnected
+//         }
+//     }
+// } )

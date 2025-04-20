@@ -1,9 +1,8 @@
 import { useFilesStore, type IFile } from "~/stores/files";
-import { waitForBufferedAmountLow } from "./useSendFileComposable/waitForBufferedAmountLow";
-import { getMetaMessage } from "./useSendFileComposable/getMetaMessage";
 import { initializeNextFile } from "./useSendFileComposable/initializeNextFile";
 import { finishActiveFile } from "./useSendFileComposable/finishActiveFile";
 import { sendSlice } from "./useSendFileComposable/sendSlice";
+import { createMetaMessage } from "./useSendFileComposable/createMetaMessage";
 
 const _state = reactive<I_State>({
     isRunning: false,
@@ -18,7 +17,7 @@ const progress = computed(() => {
         return {
             sliceCount: _state.activeFile.sliceCount,
             iSlice: _state.activeFile.iSlice,
-            percentage: 100 * (_state.activeFile.iSlice / _state.activeFile.sliceCount - 1)
+            percentage: 100 * ((_state.activeFile.iSlice + 1) / _state.activeFile.sliceCount)
         }
     }
 });
@@ -27,8 +26,7 @@ export function useSendFileComposable() {
     return {
         enqueueFiles,
         isRunning,
-        start,
-        stop,
+        progress,
     }
 }
 
@@ -52,8 +50,13 @@ function enqueueFiles(files: File[]) {
             }
         }
     });
-    const metaMessage = getMetaMessage(filesStoreFormat);
+    filesStoreFormat.forEach(file => {
+        filesStore.send.push(file);
+    } );
+    const metaMessage = createMetaMessage(filesStoreFormat);
     dataChannel.value.send(metaMessage);
+    // TODO: Check if already running before start
+    start();
 }
 
 /**
@@ -70,6 +73,7 @@ async function start() {
     const MAX_SLICE_SIZE = useRuntimeConfig().public.rtcDataChannel.maxPacketSize;
     _state.isRunning = true;
     while(_state.isRunning) {
+        console.log('--- Send file Loop: START ---');
         if (null === dataChannel.value) {
             throw Error('Datachannel is null');
         }
@@ -79,14 +83,23 @@ async function start() {
             } catch (error: any) {
                 if (error.message === 'No enqueued files') {
                     stop();
+                    console.log('--- Send file Loop: STOP ---');
                     return;
                 }
             }
         }
-        sendSlice(dataChannel.value, _state, MAX_SLICE_SIZE);
+        await sendSlice(dataChannel.value, _state, MAX_SLICE_SIZE);
+        console.log(`--- SLICE SENT. Slice number: ${_state.activeFile?.iSlice} from ${_state.activeFile?.sliceCount} ---`);
+        // The loop has to repeat faster, than the datachannels bufferedammount gets low!
         if (_state.activeFile!.iSlice === _state.activeFile!.sliceCount - 1) {
             finishActiveFile(filesStore, dataChannel.value, MAX_SLICE_SIZE, _state);
+            console.log('--- FILE FINISHED ---');
         }
+        // Count up only at the end of all progress
+        if ( _state.activeFile ) {
+            _state.activeFile.iSlice++;
+        }
+        console.log('--- Send file Loop: END ---');
     }
 }
 
