@@ -1,0 +1,1 @@
+{"candidate":"candidate:4025446608 1 udp 2113937151 002fdbe1-4a0b-424b-9cd9-25faff5d91c3.local 39269 typ host generation 0 ufrag S0oA network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"S0oA"}

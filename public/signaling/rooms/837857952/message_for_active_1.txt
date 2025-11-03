@@ -1,0 +1,1 @@
+{"candidate":"candidate:1481352021 1 udp 2113937151 1fce818b-b7c5-415d-acf0-41e0d953f89f.local 39795 typ host generation 0 ufrag bILb network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"bILb"}

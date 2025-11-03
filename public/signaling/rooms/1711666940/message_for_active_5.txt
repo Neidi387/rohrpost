@@ -1,0 +1,1 @@
+{"candidate":"candidate:3043254680 1 udp 2113939711 3bfdfa51-4745-4107-9dcd-5dc6eb26c716.local 45489 typ host generation 0 ufrag mSlh network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"mSlh"}

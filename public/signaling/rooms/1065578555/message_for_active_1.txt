@@ -1,0 +1,1 @@
+{"candidate":"candidate:3378674808 1 udp 2113937151 b9d285a3-c0ec-4132-b88b-8787d172c43c.local 36692 typ host generation 0 ufrag fLsN network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"fLsN"}

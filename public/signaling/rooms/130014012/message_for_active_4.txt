@@ -1,0 +1,1 @@
+{"candidate":"candidate:1158533519 1 udp 2113937151 fb661187-b4ac-495f-8ae8-c05fad38f5e2.local 56097 typ host generation 0 ufrag PLYC network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"PLYC"}

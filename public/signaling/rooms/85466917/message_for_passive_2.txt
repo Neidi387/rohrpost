@@ -1,0 +1,1 @@
+{"candidate":"candidate:2401794063 1 udp 2113939711 e3d0fb44-944d-4863-828a-6038b1523f0b.local 33581 typ host generation 0 ufrag aEsq network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"aEsq"}

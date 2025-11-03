@@ -1,11 +1,10 @@
 <template>
-    <v-app-bar title="Hallo Welt" elevation="2" color="#CCCCCC"></v-app-bar>
-    <v-main>
-        <slot></slot>
+<v-layout class="rounded rounded-md border">
+    <v-app-bar title="Application bar"></v-app-bar>
+    <v-main class="d-flex align-stretch justify-stretch">
+    <slot></slot>
     </v-main>
-    <v-footer app elevation="2" color="#CCCCCC">
-        <span>--Made by Neidi</span>
-    </v-footer>
+  </v-layout>
 </template>
 
 <script setup lang="ts">

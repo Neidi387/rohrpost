@@ -1,0 +1,1 @@
+{"candidate":"candidate:3623123374 1 udp 2113937151 d57ac383-df88-40d7-93c1-5c99f279ee08.local 42415 typ host generation 0 ufrag Olc8 network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"Olc8"}

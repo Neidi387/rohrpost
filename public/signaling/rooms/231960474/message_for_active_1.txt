@@ -1,0 +1,1 @@
+{"candidate":"candidate:313385470 1 udp 2113937151 2e89d547-7ffc-4535-a33c-e1446e6f0b3a.local 55565 typ host generation 0 ufrag AMg\/ network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"AMg\/"}

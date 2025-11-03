@@ -1,0 +1,1 @@
+{"candidate":"candidate:1778893804 1 udp 2113939711 6f7bbf0e-4eae-487f-8f35-aa43c956557c.local 57654 typ host generation 0 ufrag H3+N network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"H3+N"}

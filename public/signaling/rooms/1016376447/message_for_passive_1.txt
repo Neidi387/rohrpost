@@ -1,0 +1,1 @@
+{"candidate":"candidate:337369070 1 udp 2113937151 32203367-a524-4075-9d99-b8fb1585d87b.local 52539 typ host generation 0 ufrag sAeL network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"sAeL"}

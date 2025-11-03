@@ -1,0 +1,1 @@
+{"candidate":"candidate:4094499688 1 udp 2113939711 272c14bb-f281-4807-bcd3-42de991ecb0c.local 42129 typ host generation 0 ufrag 3JKR network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"3JKR"}

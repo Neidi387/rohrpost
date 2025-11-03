@@ -1,0 +1,1 @@
+{"candidate":"candidate:3529726420 1 udp 2113939711 e4c7480d-9e35-4c36-b9e1-61403cf6df0a.local 59146 typ host generation 0 ufrag +CP1 network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"+CP1"}

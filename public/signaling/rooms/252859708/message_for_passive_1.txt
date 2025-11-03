@@ -1,0 +1,1 @@
+{"candidate":"candidate:4193993847 1 udp 2113937151 781c03fb-d21f-4358-905e-0bc0e9c7b9ff.local 33620 typ host generation 0 ufrag BGZO network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"BGZO"}

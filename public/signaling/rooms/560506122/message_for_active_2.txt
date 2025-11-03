@@ -1,0 +1,1 @@
+{"candidate":"candidate:2506953709 1 udp 2113939711 0fb02b28-9180-44ef-8d2d-4ec35417b50a.local 60658 typ host generation 0 ufrag VuNp network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"VuNp"}

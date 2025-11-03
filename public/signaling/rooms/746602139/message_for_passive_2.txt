@@ -1,0 +1,1 @@
+{"candidate":"candidate:1539083925 1 udp 2113939711 6e403769-3cf6-4dbf-84bf-2867b27c4a53.local 53599 typ host generation 0 ufrag QbrC network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"QbrC"}

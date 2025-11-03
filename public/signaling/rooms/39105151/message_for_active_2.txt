@@ -1,0 +1,1 @@
+{"candidate":"candidate:349426634 1 udp 2113939711 0012109b-adbc-43e8-ade8-1c6b13e4837b.local 57825 typ host generation 0 ufrag WAPt network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"WAPt"}

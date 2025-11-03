@@ -1,0 +1,1 @@
+{"candidate":"candidate:2173002146 1 udp 2113937151 361570c2-ece0-49b6-8f36-2097f796e808.local 35956 typ host generation 0 ufrag i3Fx network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"i3Fx"}

@@ -1,0 +1,1 @@
+{"candidate":"candidate:2016944661 1 udp 2113937151 ec09ab67-913f-4774-837d-57f65c57b37a.local 42647 typ host generation 0 ufrag n2I+ network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"n2I+"}

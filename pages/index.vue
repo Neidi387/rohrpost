@@ -1,44 +1,21 @@
 <template>
-    Ich bin die Page
-    <router-link to="first-working-version">First Working Version</router-link>
-    <br><br>
-    <button v-on:click="toggle">toggle</button>
-    {{ role }}
+    <RoleToggle v-if="!dataChannel">
+        <template v-slot:active>
+            <ActiveSignaling></ActiveSignaling>
+        </template>
+        <template v-slot:passive>
+            <PassiveSignaling></PassiveSignaling>
+        </template>
+    </RoleToggle>
+    <FileTransfer v-if="dataChannel"></FileTransfer>
 </template>
 
 <script setup lang="ts">
 
-    const _role = ref('passive');
-    let inProgress = false;
-
-    const role = computed({
-        get: () => {
-            return _role.value
-        },
-        set: (val: string) => {
-            if (inProgress) {
-                return;
-            }
-            setTimeout(() => {
-                _role.value = val;
-                inProgress = false;
-            }, 5000)
-        }
-    })
-
-    function toggle() {
-        if (role.value === 'active') {
-            debugger
-            role.value = 'passive';
-        } else {
-            debugger
-            role.value = 'active';
-        }
-    }
-
+    const {dataChannel} = useRtcDataChannel();
+    // const { dataChannel, connect } = useRtcDataChannelMock();
+    // connect(); // Ensure this properly initializes the data channel using RTCPeerConnection
 </script>
 <style scoped>
-    input {
-        border: 1px solid black;
-    }
+  
 </style>

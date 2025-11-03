@@ -1,0 +1,1 @@
+{"candidate":"candidate:424077670 1 udp 2113937151 bdaffff5-7e7f-43dd-a925-f521ac9188e1.local 38523 typ host generation 0 ufrag HDY3 network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"HDY3"}

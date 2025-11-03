@@ -1,0 +1,1 @@
+{"candidate":"candidate:3207330350 1 udp 2113937151 2d0c9d19-7070-4282-a0b6-ac40af0f419b.local 35360 typ host generation 0 ufrag U4ir network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"U4ir"}

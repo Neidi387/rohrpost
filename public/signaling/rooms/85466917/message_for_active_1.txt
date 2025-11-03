@@ -1,0 +1,1 @@
+{"candidate":"candidate:2854836113 1 udp 2113937151 946c6f3c-7c98-45cc-b43e-cd2b39894d80.local 57977 typ host generation 0 ufrag fhZy network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"fhZy"}

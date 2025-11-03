@@ -1,0 +1,1 @@
+{"candidate":"candidate:2539999649 1 udp 2113937151 a289b599-0aaf-4338-be1a-cfa655e48b02.local 60913 typ host generation 0 ufrag a8PR network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"a8PR"}

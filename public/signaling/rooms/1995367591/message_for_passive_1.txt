@@ -1,0 +1,1 @@
+{"candidate":"candidate:3913069360 1 udp 2113937151 27b45ea9-7041-4391-8b17-50797c48c9fc.local 43387 typ host generation 0 ufrag uZzS network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"uZzS"}

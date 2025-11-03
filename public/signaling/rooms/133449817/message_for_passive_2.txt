@@ -1,0 +1,1 @@
+{"candidate":"candidate:4232864165 1 udp 2113939711 2463d280-92e6-4c8c-9b47-ecf8ad6e5311.local 54180 typ host generation 0 ufrag Uumo network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"Uumo"}

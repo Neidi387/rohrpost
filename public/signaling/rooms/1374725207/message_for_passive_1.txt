@@ -1,0 +1,1 @@
+{"candidate":"candidate:2154473591 1 udp 2113937151 c61d818d-bf23-41f9-bac9-0c75e5dfffd6.local 36760 typ host generation 0 ufrag Sxzi network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"Sxzi"}

@@ -1,0 +1,1 @@
+{"candidate":"candidate:2183520426 1 udp 2113939711 4a617277-7109-41e5-9c48-138dda7d7936.local 56200 typ host generation 0 ufrag U7wl network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"U7wl"}

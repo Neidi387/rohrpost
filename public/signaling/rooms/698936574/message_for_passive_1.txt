@@ -1,0 +1,1 @@
+{"candidate":"candidate:1611341702 1 udp 2113937151 c95aaec3-ef09-4df5-b266-84c802070df4.local 55162 typ host generation 0 ufrag 4TOC network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"4TOC"}

@@ -1,0 +1,1 @@
+{"candidate":"candidate:1531863875 1 udp 2113939711 81460942-c5be-42de-820e-3ce6c12c79b5.local 50804 typ host generation 0 ufrag W6Wu network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"W6Wu"}

@@ -1,0 +1,1 @@
+{"candidate":"candidate:2882173353 1 udp 2113937151 c32b88e9-9c14-4624-9ce0-2ae21e23cbf0.local 39896 typ host generation 0 ufrag 4VM5 network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"4VM5"}

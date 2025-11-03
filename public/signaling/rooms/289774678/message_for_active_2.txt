@@ -1,0 +1,1 @@
+{"candidate":"candidate:904973650 1 udp 2113939711 8de8a6db-45bc-4231-ba71-0f9c40a4ec92.local 34285 typ host generation 0 ufrag k4ZK network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"k4ZK"}
