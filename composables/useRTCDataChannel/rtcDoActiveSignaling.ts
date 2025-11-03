@@ -1,7 +1,7 @@
 import { sendIceCandidate } from "./sendIceCandidate";
 import { addIceCandidateEL } from "./addIceCandidateEL";
 import type { TSignalingMessage } from "./TSignalingMessage";
-import { useLongPollingSignalingChannel } from "../useLongPollingSignalingChannel";
+import { useLongPollingSignalingChannel } from "../OLDuseLongPollingSignalingChannel";
 
 export async function rtcDoActiveSignaling(pc: RTCPeerConnection) {
     const {sendMessage, addMessageListener} = useLongPollingSignalingChannel();

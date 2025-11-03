@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 const route = useRoute();
-const { role } = useLongPollingSignalingChannel();
+const role = ref<string>Ref('passive');
 
 if ('active' === route.query.role ||
     'passive' === route.query.role) {

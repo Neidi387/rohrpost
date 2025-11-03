@@ -2,7 +2,7 @@ import { ERtcSignaing } from "~/composables/useRTCDataChannel/ERtcSignaling";
 import { getPDataChannel } from "~/composables/useRTCDataChannel/getPDataChannel";
 import { rtcDoActiveSignaling } from "~/composables/useRTCDataChannel/rtcDoActiveSignaling";
 import { rtcDoPassiveSignaling } from "~/composables/useRTCDataChannel/rtcDoPassiveSignaling";
-import { useLongPollingSignalingChannel } from "./useLongPollingSignalingChannel";
+import { useLongPollingSignalingChannel } from "./OLDuseLongPollingSignalingChannel";
 
 const peerConnection = ref<RTCPeerConnection | null>(null);
 const dataChannel = ref<RTCDataChannel | null>(null);

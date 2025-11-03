@@ -1,4 +1,4 @@
-import { useLongPollingSignalingChannel } from "../useLongPollingSignalingChannel";
+import { useLongPollingSignalingChannel } from "../OLDuseLongPollingSignalingChannel";
 
 const {sendMessage} = useLongPollingSignalingChannel();
 

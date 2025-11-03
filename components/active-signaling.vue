@@ -12,7 +12,7 @@
                 v-model="address"
                 label="Adresse"
                 outlined
-                @keydown.enter="connect"
+                @keydown.enter="joinRoom(address, role)"
             ></v-text-field>
             </v-card-text>
         <v-card-actions>
@@ -24,20 +24,19 @@
 </template>
 
 <script setup lang="ts">
-    import { useLongPollingSignalingChannel } from '~/composables/useLongPollingSignalingChannel';
-
-    const {connect: connectSignaling, isConnected: isSignalingConnected, role, address} = useLongPollingSignalingChannel();
+    const {joinRoom, close} = useLongPollingSignalingChannel();
     const {connect: connectRtc} = useRtcDataChannel();
 
+    const address = ref('');
     role.value = 'active';
 
     async function connect() {
-        await connectSignaling();
+        await joinRoom(, address.toValue, );
         await connectRtc();
     }
 
     onUnmounted(async () => {
-        isSignalingConnected.value = false;
+        await close();
     })
 
 </script>
