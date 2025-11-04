@@ -12,7 +12,7 @@
                 v-model="address"
                 label="Adresse"
                 outlined
-                @keydown.enter="joinRoom(address, role)"
+                @keydown.enter="connect()"
             ></v-text-field>
             </v-card-text>
         <v-card-actions>
@@ -24,15 +24,21 @@
 </template>
 
 <script setup lang="ts">
-    const {joinRoom, close} = useLongPollingSignalingChannel();
-    const {connect: connectRtc} = useRtcDataChannel();
+    const {joinRoom, close, isRoomNotFoundException} = useLongPollingSignalingChannel();
+    const {connectActive: connectRtcActive} = useRtcDataChannel();
 
     const address = ref('');
-    role.value = 'active';
 
     async function connect() {
-        await joinRoom(, address.toValue, );
-        await connectRtc();
+        try {
+            await joinRoom(address.value, 'active');
+        } catch (e) {
+            if (isRoomNotFoundException(e)) {
+                alert(("Raum nicht gefunden"));
+                return;
+            }
+        }
+        await connectRtcActive();
     }
 
     onUnmounted(async () => {

@@ -2,7 +2,11 @@ export function waitForBufferedAmountLow(dataChannel: RTCDataChannel): Promise<v
     return new Promise((resolve) => {
         const onBufferedAmountLow = () => {
             dataChannel.removeEventListener('bufferedamountlow', onBufferedAmountLow);
-            resolve();
+            setTimeout(() => {
+                // Extra delay to ensure buffer is really low
+                resolve();
+            }, 1000);
+            // resolve();
         };
         dataChannel.addEventListener('bufferedamountlow', onBufferedAmountLow);
     });

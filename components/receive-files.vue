@@ -2,7 +2,7 @@
     <div>
         <v-icon>mdi-arrow-right-bold-outline</v-icon>
         <v-icon>mdi-mailbox-outline</v-icon>
-        <v-list lines="two">
+        <v-list lines="two" style="max-height: 40vh; overflow-y: auto;">
             <v-list-item 
                 v-for="file in fileStore.receive"
                 :key="file.identifier"
@@ -51,18 +51,10 @@
 
 <script setup lang="ts">
     import { useReceiveFileComposable } from '~/composables/useReceiveFileComposable';
-    import { useFilesStoreMock } from '~/stores/test/files_mock';
+    
+    const fileStore = useFilesStore();
 
-    const fileStore = useFilesStoreMock();
-    const {listen, unlisten /*, progress */} = useReceiveFileComposable();
-    const progress = ref({
-        sliceCount: 100,
-        iSlice: 24,
-        percentage: 24,
-    });
-    // const fileStore = useFilesStore();
-    // const {listen, unlisten, progress} = useReceiveFileComposable();
-
+    const {listen, unlisten, progress } = useReceiveFileComposable();
 
     const activeFile = computed(() => fileStore.receive.find(file => file.state === 'progress'));    
 

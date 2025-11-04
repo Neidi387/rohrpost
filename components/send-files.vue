@@ -8,7 +8,7 @@
             <input :key="updateKey" multiple ref="fileInput" type="file" @input="sendFile" style="display: none;">
         </label>
 
-        <v-list lines="two">
+        <v-list lines="two" style="max-height: 40vh; overflow-y: auto;">
             <v-list-item v-for="file in fileStore.send" :key="file.identifier" color="primary">
                 <template v-slot:prepend>
                     <v-icon v-if="'queue' === file.state" color="orange">mdi-email-arrow-right-outline</v-icon>
@@ -42,14 +42,17 @@
 </template>
 
 <script lang="ts" setup>
-import { useFilesStoreMock } from '~/stores/test/files_mock';
+// import { useFilesStoreMock } from '~/stores/test/files_mock';
+// const fileStore = useFilesStoreMock();
 import { useSendFileComposable } from '~/composables/useSendFileComposable';
 import { useDropZone } from '@vueuse/core';
 
 const dropZoneRef = ref<HTMLDivElement>();
 
-const fileStore = useFilesStoreMock();
-const { enqueueFiles/*, progress  */ } = useSendFileComposable();
+const fileStore = useFilesStore();
+
+
+const { enqueueFiles, progress } = useSendFileComposable();
 
 const { isOverDropZone } = useDropZone(dropZoneRef, {
     onDrop,
@@ -58,11 +61,11 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
     // whether to prevent default behavior for unhandled events
     preventDefaultForUnhandled: false,
 });
-const progress = ref({
-    sliceCount: 100,
-    iSlice: 24,
-    percentage: 24,
-});
+// const progress = ref({
+//     sliceCount: 100,
+//     iSlice: 24,
+//     percentage: 24,
+// });
 
 // const fileStore = useFilesStore();
 // const { enqueueFiles, progress  } = useSendFileComposable();

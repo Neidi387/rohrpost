@@ -19,11 +19,6 @@
 
     const {dataChannel} = useRtcDataChannel();
 
-    
-
-
-
-
 </script>
 
 <style scoped>

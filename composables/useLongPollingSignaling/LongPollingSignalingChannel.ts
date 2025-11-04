@@ -1,25 +1,37 @@
-import type { TSignalingMessage } from "../useRTCDataChannel/TSignalingMessage";
-
 const apiUrl = useRuntimeConfig().public.signaling;
 
 export class LongPollingSignalingChannel {
 
     static ROOM_NOT_FOUND_EXCEPTION = 'ROOM NOT FOUND';
 
-    static async openRoom(role = 'passive'): Promise<LongPollingSignalingChannel> {
+    static async openRoom(role = 'passive', onAddressOffer: (addressOffer: string) => Promise<void>): Promise<LongPollingSignalingChannel> {
         // Create room folder on the server
         const {address: newAddress} = await fetch(apiUrl + 'room.php', {
-            method: 'POST'
+            method: 'POST',
         }).then(res => res.json());
+        try {
+            await onAddressOffer(newAddress);
+        } catch( e ) {
+            const response = await fetch( apiUrl + 'room.php', {
+                method: 'DELETE',
+                body: JSON.stringify({
+                    address: newAddress,
+                })
+            } );
+            const {status} = await response.json();
+            console.log('Room creation aborted. Deleted Room. Server Message: ' + status);
+            // SOll ich hier jetzt echt nen RoomCreationAbrotedExpection werfen?
+            throw Error('Room creation aborted. No message from actice end. Room deleted.');
+        }
         // Create channel instance and do ping pong to ensure connection
         const channel = new LongPollingSignalingChannel(newAddress, role);
         return new Promise(res => {
             // Expecting Ping message, when active side is ready
             channel.addMessageListener( msg => {
                 if ('type' in msg && 'ping' === msg.type ) {
+                    channel.sendMessage({ type: "pong", message: "Hello from the " + role + " side" });
                     res(channel);
                 }
-            channel.sendMessage({ type: "ping", message: "Hello from the " + role + " side" });
             } );
         })
     }
@@ -104,9 +116,15 @@ export class LongPollingSignalingChannel {
     }
 
     async checkRoomExistance(response: Response ) {
-        if ( 404 === response.status && 'room not found' === (await response.json()).status ) {
+        const clone = response.clone(); // TODO: Clean this up later, performance....
+        if ( 404 === clone.status && 'room not found' === (await clone.json()).status ) {
             throw new LongPollingSignalingChannelRoomNotFoundException('Room not found');
         }
+    }
+
+    static isRoomNotFoundException( e: unknown ): e is LongPollingSignalingChannelRoomNotFoundException  {
+        return e instanceof LongPollingSignalingChannelRoomNotFoundException
+            || (!!e && typeof e === 'object' && (e as any).name === LongPollingSignalingChannel.ROOM_NOT_FOUND_EXCEPTION);
     }
 
 }
@@ -114,6 +132,6 @@ export class LongPollingSignalingChannel {
 class LongPollingSignalingChannelRoomNotFoundException extends Error {
     constructor(msg: string) {
         super(msg);
-        this.name = "LongPollingSignalingChannelRoomNotFoundException";
+        this.name = LongPollingSignalingChannel.ROOM_NOT_FOUND_EXCEPTION;
     }
 }

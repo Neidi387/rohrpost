@@ -10,21 +10,24 @@ export function useLongPollingSignalingChannel(): ILongPollingSignalingChannel {
         joinRoom,
         channel,
         close,
+        isRoomNotFoundException
     }
 }
 
 interface ILongPollingSignalingChannel {
-    openRoom: (role: 'passive' | 'active') => Promise<void>;
+    openRoom: (role: 'passive' | 'active', onRoomOpened: (address: string) => Promise<void>) => Promise<void>;
     joinRoom: (address: string, role: 'passive' | 'active') => Promise<void>;
     channel: Ref<null | LongPollingSignalingChannel>;
     close: () => Promise<void>;
+    isRoomNotFoundException: (e: any) => boolean;
 }
 
-async function openRoom( role: 'passive' | 'active' )  {
+async function openRoom( role: 'passive' | 'active', onAddressOffer: (addressOffer: string) => Promise<void> ) {
     if (channel.value) {
         throw Error('Signaling Channel already exists. Cloese before.');
     }
-    const newChannel = await LongPollingSignalingChannel.openRoom(role);
+    const newChannel = await LongPollingSignalingChannel.openRoom(role, onAddressOffer);
+    await onAddressOffer(newChannel.address);
     channel.value = newChannel;
 }
 
@@ -46,3 +49,4 @@ async function close() {
     channelTmp.closeRoom();
 }
 
+const isRoomNotFoundException = LongPollingSignalingChannel.isRoomNotFoundException;

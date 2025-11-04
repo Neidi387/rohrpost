@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 const route = useRoute();
-const role = ref<string>Ref('passive');
+const role = ref<'passive' | 'active'>('passive');
 
 if ('active' === route.query.role ||
     'passive' === route.query.role) {

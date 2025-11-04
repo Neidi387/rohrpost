@@ -1,10 +1,9 @@
 import { useLongPollingSignalingChannel } from "../OLDuseLongPollingSignalingChannel";
+import type { LongPollingSignalingChannel } from "../useLongPollingSignaling/LongPollingSignalingChannel";
 
-const {sendMessage} = useLongPollingSignalingChannel();
-
-export async function sendIceCandidate(evt: RTCPeerConnectionIceEvent) {
+export async function sendIceCandidate(evt: RTCPeerConnectionIceEvent, channel: LongPollingSignalingChannel) {
     if (null === evt.candidate) {
         return
     }
-    sendMessage(evt.candidate);
+    channel.sendMessage(evt.candidate);
 }

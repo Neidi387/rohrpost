@@ -28,19 +28,33 @@
     import { useLongPollingSignalingChannel } from '~/composables/useLongPollingSignalingChannel';
     import { useRtcDataChannel } from '~/composables/useRtcDataChannel';
 
-    const {openRoom, connect: connectSignaling, isConnected: isSignalingConnected, role, address} = useLongPollingSignalingChannel();
-    const {connect: connectRtc} = useRtcDataChannel();
+    const {openRoom, isRoomNotFoundException, close, channel} = useLongPollingSignalingChannel();
+    const {connectPassive: connectPassiveRtc } = useRtcDataChannel();
 
-    role.value = 'passive';
+    const address = ref<string>('Initial');
 
+    // TODO: Maybe wait here until room is created...
     onBeforeMount(async () => {
-        await openRoom();
-        await connectSignaling();
-        await connectRtc();
+        try {
+            address.value = 'Lädt...';
+            await openRoom('passive', async (newAddress: string) => {
+                address.value = 'Offer is here'
+                await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+                console.log('An hier ist der Room erstellt und die Addresse wird angezeig. Aber der Channel ist nocht nicht instanziert.');
+                address.value = newAddress;
+            });
+            console.log('Ab wird auf das ping vom active gewartet, danach existiert der Channel.');
+        } catch (e) {
+            if (isRoomNotFoundException(e)) {
+                alert(("Raum nicht gefunden"));
+                return;
+            }
+        }
+        await connectPassiveRtc();
     });
 
     onUnmounted(async () => {
-        isSignalingConnected.value = false;
+        await close();
     })
 
     function copyToClipboard(text: string) {
