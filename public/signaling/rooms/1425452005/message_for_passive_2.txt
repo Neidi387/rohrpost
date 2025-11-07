@@ -1,1 +1,0 @@
-{"candidate":"candidate:2595712578 1 udp 2113939711 bd07d1d6-1387-4c66-a6c3-eea98a5f9f0f.local 36240 typ host generation 0 ufrag l3bZ network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"l3bZ"}

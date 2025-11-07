@@ -1,1 +1,0 @@
-{"candidate":"candidate:3554658687 1 udp 2113937151 fa2351be-0520-432e-bd20-42714f763efb.local 58433 typ host generation 0 ufrag z3cc network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"z3cc"}

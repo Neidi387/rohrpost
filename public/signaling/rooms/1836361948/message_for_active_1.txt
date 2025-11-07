@@ -1,1 +1,0 @@
-{"candidate":"candidate:1347087817 1 udp 2113937151 d86b22aa-8d94-426e-8beb-159998f6848e.local 58101 typ host generation 0 ufrag iORy network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"iORy"}

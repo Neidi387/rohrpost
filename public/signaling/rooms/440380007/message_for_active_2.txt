@@ -1,1 +1,0 @@
-{"candidate":"candidate:1261890909 1 udp 2113939711 d9b56235-9861-489a-85f6-a9ab9a454868.local 43405 typ host generation 0 ufrag hqmv network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"hqmv"}

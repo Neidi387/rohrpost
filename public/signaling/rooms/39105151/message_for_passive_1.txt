@@ -1,1 +1,0 @@
-{"candidate":"candidate:2224079335 1 udp 2113937151 af757ebf-5d60-4144-835b-4257a3fa57f0.local 42169 typ host generation 0 ufrag ZtXR network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"ZtXR"}

@@ -8,7 +8,7 @@
             <input :key="updateKey" multiple ref="fileInput" type="file" @input="sendFile" style="display: none;">
         </label>
 
-        <v-list lines="two" style="max-height: 40vh; overflow-y: auto;">
+        <v-list lines="two" style="max-height: 35vh; overflow-y: auto;">
             <v-list-item v-for="file in fileStore.send" :key="file.identifier" color="primary">
                 <template v-slot:prepend>
                     <v-icon v-if="'queue' === file.state" color="orange">mdi-email-arrow-right-outline</v-icon>

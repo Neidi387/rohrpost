@@ -1,1 +1,0 @@
-{"candidate":"candidate:289955697 1 udp 2113937151 5b63332e-5b19-463b-bce3-7f9b1779c60d.local 34978 typ host generation 0 ufrag s8At network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"s8At"}

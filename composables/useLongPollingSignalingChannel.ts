@@ -24,10 +24,10 @@ interface ILongPollingSignalingChannel {
 
 async function openRoom( role: 'passive' | 'active', onAddressOffer: (addressOffer: string) => Promise<void> ) {
     if (channel.value) {
-        throw Error('Signaling Channel already exists. Cloese before.');
+        throw Error('Signaling Channel already exists. Close before.');
     }
     const newChannel = await LongPollingSignalingChannel.openRoom(role, onAddressOffer);
-    await onAddressOffer(newChannel.address);
+    // await onAddressOffer(newChannel.address);
     channel.value = newChannel;
 }
 
@@ -43,7 +43,6 @@ async function close() {
     if (null === channel.value) {
         throw Error('Room does not exist.');
     }
-    console.log('Closing room. Destroy channel object and tell channel to delete room folder');
     const channelTmp = channel.value;
     channel.value = null;
     channelTmp.closeRoom();

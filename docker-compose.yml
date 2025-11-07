@@ -2,7 +2,7 @@ services:
   signaling:
     image: php:8.3-apache
     volumes: 
-      - ./public:/var/www/html
-      # - ./dist:/var/www/html
+      # - ./public:/var/www/html
+      - ./dist:/var/www/html
     ports:
       - 80:80

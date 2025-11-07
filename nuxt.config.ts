@@ -22,6 +22,11 @@ export default defineNuxtConfig({
       url: 'http://' + devHost,
       rtcDataChannel: {
         maxPacketSize: 16 * 2 ** 10 // 16384
+      },
+      stun: {
+        url: 'turn:relay1.expressturn.com:3480',
+        username: '000000002077524954',
+        password: '968HGcDZsppBD81gIJZ0v2RC3Qw=',
       }
     },
   },

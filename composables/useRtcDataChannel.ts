@@ -5,6 +5,13 @@ import { rtcDoPassiveSignaling } from "~/composables/useRTCDataChannel/rtcDoPass
 
 const peerConnection = ref<RTCPeerConnection | null>(null);
 const dataChannel = ref<RTCDataChannel | null>(null);
+const iceServers = [
+    { 
+        urls: useRuntimeConfig().public.stun.url,
+        username: useRuntimeConfig().public.stun.username,
+        credential: useRuntimeConfig().public.stun.password,
+    },
+];
 
 export function useRtcDataChannel() {
     return {
@@ -20,11 +27,13 @@ async function connectActive() {
     if ( null === channel.value ) {
         throw Error('Signaling channel is not established.');
     }
-    const pc = new RTCPeerConnection();
+    const pc = new RTCPeerConnection({ iceServers});
     const dc = pc.createDataChannel(ERtcSignaing.DATACHANNEL_LABEL);
     await rtcDoActiveSignaling(pc, channel.value);
-    peerConnection.value = pc;
-    dataChannel.value = dc;
+    dc.addEventListener('open', () => {
+        peerConnection.value = pc;
+        dataChannel.value = dc;
+    });
 }
 
 async function connectPassive() {
@@ -32,10 +41,12 @@ async function connectPassive() {
     if ( null === channel.value ) {
         throw Error('Signaling channel is not established.');
     }
-    const pc = new RTCPeerConnection();
+    const pc = new RTCPeerConnection({ iceServers });
     const pDc = getPDataChannel(pc);
     await rtcDoPassiveSignaling(pc, channel.value);
     const dc = await pDc;
-    peerConnection.value = pc;
-    dataChannel.value = dc;
+    dc.addEventListener('open', () => {
+        peerConnection.value = pc;
+        dataChannel.value = dc;
+    });
 }

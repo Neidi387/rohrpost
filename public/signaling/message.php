@@ -9,7 +9,7 @@
         parse_str($_SERVER['QUERY_STRING'], $request);
         $request = (object)$request;
         checkAddressAndDie($request->address);
-        $fullMessageFilename = "rooms/$request->address/message_for_{$request->role}_$request->i_message.txt";
+        $fullMessageFilename = "rooms/$request->address/message_from_" . getOppositeRole($request->role) . "_$request->i_message.txt";
         $waitForMs = ($request->seconds_to_wait ?? 1) * 1000;
         for ($msElapsed = 0; $msElapsed < $waitForMs; $msElapsed += GET_MESSAGE_INTERVALL_MS) {
             if (file_exists($fullMessageFilename)) {
@@ -31,11 +31,7 @@
     } else if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
         $request = json_decode(file_get_contents('php://input'));
         checkAddressAndDie($request->address);
-        $recipientRole = match ($request->role) {
-            'active' => 'passive',
-            'passive' => 'active',
-        };
-        file_put_contents("rooms/$request->address/message_for_{$recipientRole}_$request->i_message.txt", json_encode($request->message));
+        file_put_contents("rooms/$request->address/message_from_{$request->role}_$request->i_message.txt", json_encode($request->message));
         die();
     }
 
@@ -48,3 +44,13 @@
             die(json_encode($response));
         }
     }
+    
+
+    function getOppositeRole(string $peer): string {
+        return match ($peer) {
+            'active' => 'passive',
+            'passive' => 'active',
+        };
+    }
+
+    

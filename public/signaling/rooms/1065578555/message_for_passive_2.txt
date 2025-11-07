@@ -1,1 +1,0 @@
-{"candidate":"candidate:2305308849 1 udp 2113939711 26984c90-d965-451e-83ce-be918dd4154f.local 36093 typ host generation 0 ufrag PcfZ network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"PcfZ"}

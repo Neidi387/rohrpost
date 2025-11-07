@@ -1,1 +1,0 @@
-{"candidate":"candidate:1069961693 1 udp 2113939711 37060908-66e9-4d32-acb9-159b8cd8e3f3.local 39217 typ host generation 0 ufrag D7sD network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"D7sD"}

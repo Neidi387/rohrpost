@@ -1,1 +1,0 @@
-{"candidate":"candidate:1713120880 1 udp 2113937151 1461cac8-ff41-4753-8ace-32d771e0510b.local 41335 typ host generation 0 ufrag v8xH network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"v8xH"}

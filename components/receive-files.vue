@@ -2,7 +2,7 @@
     <div>
         <v-icon>mdi-arrow-right-bold-outline</v-icon>
         <v-icon>mdi-mailbox-outline</v-icon>
-        <v-list lines="two" style="max-height: 40vh; overflow-y: auto;">
+        <v-list lines="two" style="max-height: 35; overflow-y: auto;">
             <v-list-item 
                 v-for="file in fileStore.receive"
                 :key="file.identifier"

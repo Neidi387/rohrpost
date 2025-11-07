@@ -19,16 +19,14 @@ export class LongPollingSignalingChannel {
                 })
             } );
             const {status} = await response.json();
-            console.log('Room creation aborted. Deleted Room. Server Message: ' + status);
             // SOll ich hier jetzt echt nen RoomCreationAbrotedExpection werfen?
-            throw Error('Room creation aborted. No message from actice end. Room deleted.');
         }
         // Create channel instance and do ping pong to ensure connection
         const channel = new LongPollingSignalingChannel(newAddress, role);
         return new Promise(res => {
             // Expecting Ping message, when active side is ready
             channel.addMessageListener( msg => {
-                if ('type' in msg && 'ping' === msg.type ) {
+                if (msg && 'type' in msg && 'ping' === msg.type ) {
                     channel.sendMessage({ type: "pong", message: "Hello from the " + role + " side" });
                     res(channel);
                 }
@@ -42,7 +40,7 @@ export class LongPollingSignalingChannel {
             const channel = new LongPollingSignalingChannel(address, role);
             // Send ping because passive side is waiting for it
             channel.addMessageListener( msg => {
-                if ('type' in msg && 'pong' === msg.type ) {
+                if (msg && 'type' in msg && 'pong' === msg.type ) {
                     res(channel);
                 }
             } );
@@ -79,28 +77,26 @@ export class LongPollingSignalingChannel {
     }
 
     private async startListeningForMessages() {
-        setTimeout(async () => {
-            while( 'für immer und ewig' ) {
-                const params = new URLSearchParams({
-                    address: this.address,
-                    role: this.role,
-                    i_message: String(this.iMessage.received),
-                    seconds_to_wait: '2',
-                });
-                const response = await fetch(apiUrl + 'message.php' + '?' + params.toString());
-                await this.checkRoomExistance(response);
-                const {message, status} = await response.json();
-                if ( 404 === response.status && 'message not found' === status ) {
-                    console.log('message not there yet, retry');
-                    continue;
-                } else if (false === response.ok) {
-                    console.error('Invalid Response', response, message, status);
-                    break;
-                }
-                this.messageListeners.forEach(fun => fun(message));
-                this.iMessage.received++;
+        while( true ) {
+            const params = new URLSearchParams({
+                address: this.address,
+                role: this.role,
+                i_message: String(this.iMessage.received),
+                seconds_to_wait: '2',
+            });
+            const response = await fetch(apiUrl + 'message.php' + '?' + params.toString());
+            await this.checkRoomExistance(response);
+            const {message, status} = await response.json();
+            if ( 404 === response.status && 'message not found' === status ) {
+                continue;
+            } else if (false === response.ok) {
+                break;
             }
-        })
+            this.messageListeners.forEach(fun => {
+                fun(message);
+            } );
+            this.iMessage.received++;
+        }
     }
 
     async closeRoom() {
@@ -111,7 +107,6 @@ export class LongPollingSignalingChannel {
             })
         } );
         const {status} = await response.json();
-        console.log('closed Room. Server Message: ' + status);
         
     }
 

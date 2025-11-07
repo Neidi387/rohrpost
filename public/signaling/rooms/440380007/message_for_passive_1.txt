@@ -1,1 +1,0 @@
-{"candidate":"candidate:2643448470 1 udp 2113937151 e8586885-9ea9-4b13-a386-2b741104a063.local 42775 typ host generation 0 ufrag Iqxv network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"Iqxv"}

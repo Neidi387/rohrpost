@@ -1,1 +1,0 @@
-{"candidate":"candidate:3561343289 1 udp 2113937151 5533b1ce-0673-424e-a49f-73da7f653b79.local 48765 typ host generation 0 ufrag A4RR network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"A4RR"}

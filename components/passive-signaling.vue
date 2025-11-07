@@ -31,19 +31,14 @@
     const {openRoom, isRoomNotFoundException, close, channel} = useLongPollingSignalingChannel();
     const {connectPassive: connectPassiveRtc } = useRtcDataChannel();
 
-    const address = ref<string>('Initial');
+    const address = ref<string>('...');
 
     // TODO: Maybe wait here until room is created...
     onBeforeMount(async () => {
         try {
-            address.value = 'Lädt...';
             await openRoom('passive', async (newAddress: string) => {
-                address.value = 'Offer is here'
-                await new Promise<void>((resolve) => setTimeout(resolve, 1000));
-                console.log('An hier ist der Room erstellt und die Addresse wird angezeig. Aber der Channel ist nocht nicht instanziert.');
                 address.value = newAddress;
             });
-            console.log('Ab wird auf das ping vom active gewartet, danach existiert der Channel.');
         } catch (e) {
             if (isRoomNotFoundException(e)) {
                 alert(("Raum nicht gefunden"));

@@ -1,1 +1,0 @@
-{"candidate":"candidate:1720479418 1 udp 2113937151 45d1ea91-5ae7-456d-99ec-93a11876a59f.local 49786 typ host generation 0 ufrag JnlH network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"JnlH"}

@@ -1,1 +1,0 @@
-{"candidate":"candidate:1312289993 1 udp 2113937151 fb661187-b4ac-495f-8ae8-c05fad38f5e2.local 35408 typ host generation 0 ufrag CH48 network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"CH48"}

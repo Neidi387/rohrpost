@@ -1,1 +1,0 @@
-{"candidate":"candidate:1096542273 1 udp 2113939711 59df8cb0-cb2a-4a96-9293-c4ec3aa47c98.local 60172 typ host generation 0 ufrag fwhb network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"fwhb"}

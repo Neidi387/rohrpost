@@ -7,7 +7,7 @@ export async function rtcDoActiveSignaling(pc: RTCPeerConnection, channel: LongP
     pc.addEventListener('icecandidate', (evt) => sendIceCandidate(evt, channel));
     channel.addMessageListener(msg => addIceCandidateEL(pc, msg));
     const pAnswer = new Promise<RTCSessionDescriptionInit>(res => channel.addMessageListener((msg: TSignalingMessage) => {
-        if ('sdp' in msg && 'answer' === msg.type) {
+        if (msg && 'sdp' in msg && 'answer' === msg.type) {
             res(msg);
         }
     }));

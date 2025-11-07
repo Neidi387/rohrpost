@@ -1,4 +1,5 @@
 <template>
+    {{ dataChannel?.readyState ?? 'dc gibts ned' }}
     <RoleToggle v-if="!dataChannel">
         <template v-slot:active>
             <ActiveSignaling></ActiveSignaling>

@@ -1,1 +1,0 @@
-{"candidate":"candidate:2807730563 1 udp 2113937151 fe6be315-23ec-4142-8380-8ad6731f63d7.local 39634 typ host generation 0 ufrag pLU3 network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"pLU3"}

@@ -5,9 +5,8 @@
     $request = json_decode($string);
     if ('POST' == $_SERVER['REQUEST_METHOD']) {
         $address = mt_rand();
+        $address = substr($address, -3);
         mkdir("rooms/$address");
-        file_put_contents("rooms/$address/i_message_stack_tail_for_active.txt", 0);
-        file_put_contents("rooms/$address/i_message_stack_tail_for_passive.txt", 0);
         $response = [
             'status' => 'room created',
             'address' => $address,
@@ -30,7 +29,7 @@
             ];
             die(json_encode($response));
         }
-        removeDir($folderFilename);
+        // removeDir($folderFilename);
         $response = [
             'status' => 'room deleted',
         ];

@@ -1,3 +1,3 @@
 <?php 
-    const BLABLA = 124;
-    die();
+    exec('whoami', $output);
+    die($output[0]);

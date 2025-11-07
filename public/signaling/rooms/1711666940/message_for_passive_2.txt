@@ -1,1 +1,0 @@
-{"candidate":"candidate:510798147 1 udp 2113939711 95f7195c-c49f-4b3e-91b7-0e30173b5b23.local 43201 typ host generation 0 ufrag 4GnW network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"4GnW"}

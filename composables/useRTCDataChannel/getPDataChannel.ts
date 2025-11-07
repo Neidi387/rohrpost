@@ -6,6 +6,7 @@ export async function getPDataChannel(pc: RTCPeerConnection): Promise<RTCDataCha
             if (ERtcSignaing.DATACHANNEL_LABEL !== evt.channel.label) {
                 return
             }
+            console.trace('Datachannel Event fired');        
             res(evt.channel)
         })
     })

@@ -1,1 +1,0 @@
-{"candidate":"candidate:1793590857 1 udp 2113939711 217532ed-3112-40ec-9eb9-97b980efb5ea.local 39598 typ host generation 0 ufrag CleJ network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"CleJ"}

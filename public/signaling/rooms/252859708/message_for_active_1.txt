@@ -1,1 +1,0 @@
-{"candidate":"candidate:427156529 1 udp 2113937151 9f84f51a-6613-437c-a19c-3dce01fe82ae.local 40634 typ host generation 0 ufrag lZhD network-cost 999","sdpMid":"0","sdpMLineIndex":0,"usernameFragment":"lZhD"}
