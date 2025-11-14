@@ -13,18 +13,13 @@
 
 
 <script setup lang="ts">
-  import { init } from '@plausible-analytics/tracker';
 
-  const domain = 'mob2pc.com';
+  const { init, track } = useLogging();
+  const id = Math.random() < 0.5 ? 'A' : 'B';
 
-  onMounted(() => {
-    console.log('Domain: ', location.host);
-    if (location.host.includes([domain])) {
-      console.log('Init Plausible');
-      init({
-        domain: domain
-      })
-    }
+  onMounted(async () => {
+    await init();
+    track('page-view', {props: { identety: id }});
   });
 
 </script>

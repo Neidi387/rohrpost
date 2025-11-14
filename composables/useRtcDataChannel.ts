@@ -7,6 +7,7 @@ import { getPIceServers } from "./useRTCDataChannel/getPIceServers";
 const peerConnection = ref<RTCPeerConnection | null>(null);
 const dataChannel = ref<RTCDataChannel | null>(null);
 const apiPath = location.origin.replace(':3000','') + useRuntimeConfig().public.signaling + '/';
+const { track } = useLogging();
 
 export function useRtcDataChannel() {
     return {
@@ -18,6 +19,7 @@ export function useRtcDataChannel() {
 }
 
 async function connectActive() {
+    track('composable:connect-active-started');
     let isTimedOut = false;
     setTimeout(() => {
         isTimedOut = true;
@@ -28,11 +30,18 @@ async function connectActive() {
     }
     const iceServersResponse = await fetch(apiPath + 'turn.php?room=' + channel.value.address );
     const { iceServers } = await iceServersResponse.json();
+    track('turn-servers-received');
     channel.value.sendMessage({ type: 'iceServers', iceServers });
-    const pc = new RTCPeerConnection({ iceServers});
+    const pc = new RTCPeerConnection({ iceServers });
     const dc = pc.createDataChannel(ERtcSignaing.DATACHANNEL_LABEL);
     await rtcDoActiveSignaling(pc, channel.value);
     dc.addEventListener('open', () => {
+        isUsingTurn(pc). then( usingTurn => {
+            track('datachannel-open', {props: { 
+                isTimedOut: isTimedOut? 'Yes' : 'No',
+                isTurn: usingTurn ? 'Yes' : 'No',
+            }});
+        });
         if ( isTimedOut ) {
             return;
         }
@@ -41,7 +50,7 @@ async function connectActive() {
         // startPingPong(dc);
     }); 
     pc.addEventListener('connectionstatechange', (evt) => {
-        console.log('Conn state change:', pc.connectionState);
+        track('peerconnection-statechange', { props: { connectionState: pc.connectionState}});
         if (['disconnected','failed','closed'].includes(pc.connectionState)) {
             peerConnection.value = null;
             dataChannel.value = null;
@@ -49,12 +58,14 @@ async function connectActive() {
         // I could try to reconnect here
     });
     dc.addEventListener('close', () => {
+        track('datachannel-close');
         peerConnection.value = null;
         dataChannel.value = null;
     });
 }
 
 async function connectPassive() {
+    track('composable:connect-passive-started');
     let isTimedOut = false;
     setTimeout(() => {
         isTimedOut = true;
@@ -63,20 +74,28 @@ async function connectPassive() {
     if ( null === channel.value ) {
         throw Error('Signaling channel is not established.');
     }
-    const iceServers = await getPIceServers(channel.value);
+    const iceServersResponse = await fetch(apiPath + 'turn.php?room=' + channel.value.address );
+    const { iceServers } = await iceServersResponse.json();
+    track('turn-servers-received');
     const pc = new RTCPeerConnection({ iceServers });
     const pDc = getPDataChannel(pc);
     await rtcDoPassiveSignaling(pc, channel.value);
     const dc = await pDc;
+    track('datachannel-received');
     dc.addEventListener('open', () => {
-        if ( isTimedOut ) {
+        isUsingTurn(pc). then( usingTurn => {
+            track('datachannel-open', {props: { 
+                isTimedOut: isTimedOut? 'Yes' : 'No',
+                isTurn: usingTurn ? 'Yes' : 'No',
+            }});
+        });        if ( isTimedOut ) {
             return;
         }
         peerConnection.value = pc;
         dataChannel.value = dc;
     });
     pc.addEventListener('connectionstatechange', (evt) => {
-        console.log('Conn state change:', pc.connectionState);
+        track('peerconnection-statechange', { props: { connectionState: pc.connectionState}});
         if (['disconnected','failed','closed'].includes(pc.connectionState)) {
             peerConnection.value = null;
             dataChannel.value = null;
@@ -84,9 +103,29 @@ async function connectPassive() {
         // I could try to reconnect here
     });
     dc.addEventListener('close', () => {
+        track('datachannel-close');
         peerConnection.value = null;
         dataChannel.value = null;
     });
+}
+
+async function isUsingTurn(pc: RTCPeerConnection): Promise<boolean> {
+    if (!peerConnection.value) {
+        return false;
+    }
+    
+    const stats = await peerConnection.value.getStats();
+    for (const [, report] of stats) {
+        if (report.type === 'candidate-pair' && report.state === 'succeeded') {
+            const localCandidate = stats.get(report.localCandidateId);
+            const remoteCandidate = stats.get(report.remoteCandidateId);
+            
+            if (localCandidate?.candidateType === 'relay' || remoteCandidate?.candidateType === 'relay') {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 // async function startPingPong(dc: RTCDataChannel, msWait = 1000, msIntervall = 1000) {

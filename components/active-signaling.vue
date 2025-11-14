@@ -26,6 +26,7 @@ import { a } from '@vueuse/integrations/index-BgoBW25H.js';
     const {connectActive: connectRtcActive} = useRtcDataChannel();
 
     const route = useRoute();
+    const state = useStateStore();
     const address = ref('');
 
     onMounted(() => {
@@ -39,8 +40,10 @@ import { a } from '@vueuse/integrations/index-BgoBW25H.js';
             return;
         }
         try {
+            state.isLoading = true;
             await joinRoom(address.value, 'active');
         } catch (e) {
+            state.isLoading = false;
             if (isRoomNotFoundException(e)) {
                 return;
             }
@@ -50,6 +53,8 @@ import { a } from '@vueuse/integrations/index-BgoBW25H.js';
             await connectRtcActive();
         } catch (e) {
             address.value = '';
+        } finally {
+            state.isLoading = false;
         }
     });
 
