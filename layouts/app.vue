@@ -5,7 +5,7 @@
 
         </template>
       <v-app-bar-title>
-        {{ route.meta.title }}
+        mob2pc.com - App
       </v-app-bar-title>
       <template v-slot:append>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -25,10 +25,11 @@
 </template>
 
 <script setup lang="ts">
-  const route = useRoute();
   const drawer = ref(false);
 </script>
 
 <style>
-
+  html {
+    overflow-y: hidden;
+  }
 </style>

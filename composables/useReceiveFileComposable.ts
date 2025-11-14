@@ -125,10 +125,11 @@ function unlisten() {
     _state.isRunning = false;
     const { dataChannel } = useRtcDataChannel();
     if (null === dataChannel.value) {
-        throw Error('Datachannel is null');
+        console.warn('Datachannel is null');
+        return
     }
     if (null === _state.eventHandlerFn) {
-        throw Error('No event handler function');
+        cpmsp('No event handler function');
     }
     dataChannel.value.removeEventListener('message', _state.eventHandlerFn);
 }

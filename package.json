@@ -19,9 +19,13 @@
   },
   "dependencies": {
     "@mdi/font": "^7.3.67",
+    "@nuxtjs/device": "3.2.4",
     "@pinia/nuxt": "^0.7.0",
+    "@plausible-analytics/tracker": "^0.4.4",
+    "@vueuse/integrations": "^14.0.0",
     "nuxt": "^3.14.1592",
-    "pinia": "^2.2.6"
+    "pinia": "^2.2.6",
+    "qrcode": "^1.5.4"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
   "overrides": {

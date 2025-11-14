@@ -4,6 +4,7 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import { getLocalIP } from './utils/getLocalIP';
 
 const devHost = getLocalIP();
+const isDev = process.env.NODE_ENV === 'development';
 
 console.log('Dev Host: ' + devHost);
 
@@ -18,15 +19,19 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      signaling: `http://${devHost}/signaling/`,
-      url: 'http://' + devHost,
+      signaling: `/signaling/`,
       rtcDataChannel: {
         maxPacketSize: 16 * 2 ** 10 // 16384
       },
       stun: {
-        url: 'turn:relay1.expressturn.com:3480',
-        username: '000000002077524954',
-        password: '968HGcDZsppBD81gIJZ0v2RC3Qw=',
+        urls: [
+          "stun:stun.cloudflare.com:3478",
+          "turn:turn.cloudflare.com:3478?transport=udp",
+          "turn:turn.cloudflare.com:3478?transport=tcp",
+          "turns:turn.cloudflare.com:5349?transport=tcp"
+        ],
+        username: '000000002078146487',
+        password: 'CmZBT4LXDOAjUhQila07n1m6D/w=',
       }
     },
   },
@@ -35,15 +40,12 @@ export default defineNuxtConfig({
     transpile: ['vuetify']
   },
 
-  modules: [
-    (_options, nuxt) => {
-      nuxt.hooks.hook('vite:extendConfig', config => {
-        // @ts-expect-error
-        config.plugins.push( vuetify({ autoImport: true } ) )
-      })
-    },
-    '@pinia/nuxt'
-  ],
+  modules: [(_options, nuxt) => {
+    nuxt.hooks.hook('vite:extendConfig', config => {
+      // @ts-expect-error
+      config.plugins.push( vuetify({ autoImport: true } ) )
+    })
+  }, '@pinia/nuxt', '@nuxtjs/device'],
 
   vite: {
     vue: {

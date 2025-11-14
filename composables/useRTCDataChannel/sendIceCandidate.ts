@@ -4,5 +4,7 @@ export async function sendIceCandidate(evt: RTCPeerConnectionIceEvent, channel: 
     // if (null === evt.candidate) {
     //     return
     // }
+    // debugger
+    // return
     channel.sendMessage(evt.candidate);
 }

@@ -15,14 +15,14 @@ export function useLongPollingSignalingChannel(): ILongPollingSignalingChannel {
 }
 
 interface ILongPollingSignalingChannel {
-    openRoom: (role: 'passive' | 'active', onRoomOpened: (address: string) => Promise<void>) => Promise<void>;
+    openRoom: (role: 'passive' | 'active', onRoomOpened: (address: string, abortOffer: () => void) => Promise<void>) => Promise<void>;
     joinRoom: (address: string, role: 'passive' | 'active') => Promise<void>;
     channel: Ref<null | LongPollingSignalingChannel>;
     close: () => Promise<void>;
     isRoomNotFoundException: (e: any) => boolean;
 }
 
-async function openRoom( role: 'passive' | 'active', onAddressOffer: (addressOffer: string) => Promise<void> ) {
+async function openRoom( role: 'passive' | 'active', onAddressOffer: (addressOffer: string, abortOffer: () => void) => Promise<void> ) {
     if (channel.value) {
         throw Error('Signaling Channel already exists. Close before.');
     }

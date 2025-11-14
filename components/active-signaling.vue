@@ -2,48 +2,71 @@
 
 <v-card class="ma-5 pa-3" outlined>
         <v-card-title>
-            Adresse
+            Computer verbinden
         </v-card-title>
         <v-card-subtitle>
-            Gib die Adresse ein, die auf dem anderen Gerät angezeigt wird
+            Gib den Code ein, der auf dem Computer angezeigt wird.
         </v-card-subtitle>
         <v-card-text>
             <v-text-field
                 v-model="address"
                 label="Adresse"
                 outlined
-                @keydown.enter="connect()"
+                @input="address = address.toUpperCase().replaceAll(' ', '').trim()"
+                :disabled="isValidAddress"
             ></v-text-field>
             </v-card-text>
-        <v-card-actions>
-            <v-btn color="primary" @click="connect" append-icon="mdi-lan-connect">
-                Verbinden 
-            </v-btn>
-        </v-card-actions>
     </v-card>
 </template>
 
 <script setup lang="ts">
+import { a } from '@vueuse/integrations/index-BgoBW25H.js';
+
     const {joinRoom, close, isRoomNotFoundException} = useLongPollingSignalingChannel();
     const {connectActive: connectRtcActive} = useRtcDataChannel();
 
+    const route = useRoute();
     const address = ref('');
 
-    async function connect() {
+    onMounted(() => {
+        if (route.query.room && 'string' === typeof route.query.room) {
+            address.value = route.query.room;
+        }
+    });
+
+    watch(address, async () => {
+        if (false === isValidAddress.value) {
+            return;
+        }
         try {
             await joinRoom(address.value, 'active');
         } catch (e) {
             if (isRoomNotFoundException(e)) {
-                alert(("Raum nicht gefunden"));
+                return;
+            }
+            address.value = '';
+        }
+        try {
+            await connectRtcActive();
+        } catch (e) {
+            address.value = '';
+        }
+    });
+
+    onUnmounted(async () => {
+        try {
+            await close();
+        } catch(e) {
+            if (isRoomNotFoundException(e)) {
+                console.log('Room already closed');
                 return;
             }
         }
-        await connectRtcActive();
-    }
-
-    onUnmounted(async () => {
-        await close();
     })
+
+    const isValidAddress = computed(() => {
+        return /^[A-Z]{4}$/.test(address.value);
+    });
 
 </script>
 

@@ -1,18 +1,27 @@
-const apiUrl = useRuntimeConfig().public.signaling;
+const apiPath = location.origin.replace(':3000','') + useRuntimeConfig().public.signaling + '/';
 
 export class LongPollingSignalingChannel {
 
     static ROOM_NOT_FOUND_EXCEPTION = 'ROOM NOT FOUND';
 
-    static async openRoom(role = 'passive', onAddressOffer: (addressOffer: string) => Promise<void>): Promise<LongPollingSignalingChannel> {
+    static async openRoom(role = 'passive', onAddressOffer: (addressOffer: string, abortOffer: () => void) => Promise<void>): Promise<LongPollingSignalingChannel> {
         // Create room folder on the server
-        const {address: newAddress} = await fetch(apiUrl + 'room.php', {
+        const {address: newAddress} = await fetch( apiPath + 'room.php', {
             method: 'POST',
         }).then(res => res.json());
         try {
-            await onAddressOffer(newAddress);
+            const abortOffer = async () => {
+                const response = await fetch( apiPath + 'room.php', {
+                method: 'DELETE',
+                body: JSON.stringify({
+                    address: newAddress,
+                    })
+                } );
+                const {status} = await response.json();
+            }
+            await onAddressOffer(newAddress, abortOffer);
         } catch( e ) {
-            const response = await fetch( apiUrl + 'room.php', {
+            const response = await fetch( apiPath + 'room.php', {
                 method: 'DELETE',
                 body: JSON.stringify({
                     address: newAddress,
@@ -23,7 +32,8 @@ export class LongPollingSignalingChannel {
         }
         // Create channel instance and do ping pong to ensure connection
         const channel = new LongPollingSignalingChannel(newAddress, role);
-        return new Promise(res => {
+        return new Promise((res, rej) => {
+            channel.addErrorListener(rej);
             // Expecting Ping message, when active side is ready
             channel.addMessageListener( msg => {
                 if (msg && 'type' in msg && 'ping' === msg.type ) {
@@ -36,8 +46,9 @@ export class LongPollingSignalingChannel {
 
     static async joinRoom(address: string, role = 'active'): Promise<LongPollingSignalingChannel> {
         // Do ping pong to ensure connection
-        return new Promise(res => {
+        return new Promise((res, rej) => {
             const channel = new LongPollingSignalingChannel(address, role);
+            channel.addErrorListener(rej);
             // Send ping because passive side is waiting for it
             channel.addMessageListener( msg => {
                 if (msg && 'type' in msg && 'pong' === msg.type ) {
@@ -49,6 +60,7 @@ export class LongPollingSignalingChannel {
     }
 
     private messageListeners: ((msg: object) => void)[] = [];
+    private errorListeners: ((e: any) => void)[] = [];
 
     private iMessage = {
         sent: 0,
@@ -60,7 +72,7 @@ export class LongPollingSignalingChannel {
     }
 
     async sendMessage(msg: object) {
-        const response = await fetch(apiUrl + 'message.php', {
+        const response = await fetch(apiPath + 'message.php', {
             method: 'POST',
             body: JSON.stringify({
                 i_message: String(this.iMessage.sent++),
@@ -76,6 +88,11 @@ export class LongPollingSignalingChannel {
         this.messageListeners.push(listener);
     }
 
+    // To pass an error from inside another async context to the function that started that
+    private addErrorListener( listener: (e: any) => void ) {
+
+    }
+
     private async startListeningForMessages() {
         while( true ) {
             const params = new URLSearchParams({
@@ -84,7 +101,7 @@ export class LongPollingSignalingChannel {
                 i_message: String(this.iMessage.received),
                 seconds_to_wait: '2',
             });
-            const response = await fetch(apiUrl + 'message.php' + '?' + params.toString());
+            const response = await fetch(apiPath + 'message.php' + '?' + params.toString());
             await this.checkRoomExistance(response);
             const {message, status} = await response.json();
             if ( 404 === response.status && 'message not found' === status ) {
@@ -100,7 +117,7 @@ export class LongPollingSignalingChannel {
     }
 
     async closeRoom() {
-        const response = await fetch( apiUrl + 'room.php', {
+        const response = await fetch( apiPath + 'room.php', {
             method: 'DELETE',
             body: JSON.stringify({
                 address: this.address,
@@ -113,7 +130,8 @@ export class LongPollingSignalingChannel {
     async checkRoomExistance(response: Response ) {
         const clone = response.clone(); // TODO: Clean this up later, performance....
         if ( 404 === clone.status && 'room not found' === (await clone.json()).status ) {
-            throw new LongPollingSignalingChannelRoomNotFoundException('Room not found');
+            const e = new LongPollingSignalingChannelRoomNotFoundException('Room not found');
+            this.errorListeners.forEach( fun => { fun(e); } );
         }
     }
 

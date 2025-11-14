@@ -4,8 +4,19 @@
     $string = file_get_contents('php://input');
     $request = json_decode($string);
     if ('POST' == $_SERVER['REQUEST_METHOD']) {
-        $address = mt_rand();
-        $address = substr($address, -3);
+        $i = 0;
+        do {
+            $address = getRandAddress(4);
+            $folderFilename = "rooms/$address";
+            if ($i > 20) {
+                http_response_code(500);
+                $response = [
+                    'status' => 'room creation failed',
+                    'address' => $address,
+                ];
+                die(json_encode($response));
+            }
+        } while (file_exists($folderFilename));
         mkdir("rooms/$address");
         $response = [
             'status' => 'room created',
@@ -29,7 +40,7 @@
             ];
             die(json_encode($response));
         }
-        // removeDir($folderFilename);
+        removeDir($folderFilename);
         $response = [
             'status' => 'room deleted',
         ];
@@ -45,4 +56,13 @@
             unlink($file->getPathname());
         }
         rmdir($dir);
+    }
+
+    function getRandAddress(int $length = 4): string {
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $result = '';
+        for ($i = 0; $i < $length; $i++) {
+            $result .= $characters[rand(0, 25)];
+        }
+        return $result;
     }
